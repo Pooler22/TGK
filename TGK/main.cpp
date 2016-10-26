@@ -1,41 +1,30 @@
-//#include "stdafx.h"
+ï»¿//#include "stdafx.h"
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <vector>
+#include <iostream>
+#include "Triangle.h"
 
 using namespace std;
 
-class Triangle
-{
-public:
-	Triangle(vector<float>, float*);
-	void Draw() const;
-	float *a, *b, *c, *color;
-};
+float posX = 100, posY = 100, posZ = 0;
+float rotation = 0.0;
+float move_unit = 0.5;
 
-Triangle::Triangle(vector<float> abc, float* color1)
+void MyInit(void)
 {
-	this->a = new float[2]{ abc[0], abc[1] };
-	this->b = new float[2]{ abc[0] + abc[2], abc[1] };
-	this->c = new float[2]{ abc[0], abc[1] + abc[2] };
-	this->color = new float[4]{ color1[0], color1[1],color1[2], color1[3] };
+	glClearColor(0.0, 0.0, 0.0, 0.0);//select clearing (background) color
+	glViewport(0, 0, 0, 0);//poczatek u.ws. lewy gÃ³rny rÃ³g
+	glMatrixMode(GL_PROJECTION);//Nastepne 2 wiersze bâ€¢dâ€¢ modyfikowaÅ‚y m. PROJECTION
+	glLoadIdentity();//inicjalizacja
+	gluOrtho2D(0.0, 200.0, 0.0, 200.0);
+	glMatrixMode(GL_MODELVIEW); //Nastâ€¢pny wiersz bâ€¢dzie modyfikowaÅ‚ m. MODELVIEW
+	glLoadIdentity();
 }
-
-void Triangle::Draw() const
-{
-	glBegin(GL_POLYGON);
-	glColor4fv(this->color);//Red;
-	glVertex2fv(this->a);
-	glVertex2fv(this->b);
-	glVertex2fv(this->c);
-	glEnd();
-}
-
 
 void MyDisplay(void)
 {
-	// Wyswietlana scena - poczatek
 	glLoadIdentity();
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -48,48 +37,90 @@ void MyDisplay(void)
 		{0,0,1,1}
 	};
 
-	vector<vector<float>> points;
+	vector<vector<float>> points1;
+	vector<vector<float>> points2;
 
-	vector<Triangle> triangles;
-	float a = 80;
-	float sx = 100, sy = 100;
+	float a = 8;
+	float sx = 0, sy = 0;
 
-	for (auto i = 0, j = 3; i < 3; i++, j--)
+	for (auto i = 0, j = 3; i < 3; i++ , j--)
 	{
 		for (auto k = 0; k < j; k++)
 		{
-			points.push_back({ sx + (a * i),sy + (a * k), a });
+			if(i==2||k==2||(k==1 && i == 1))
+			{
+				points1.push_back({ sx + (a * i),sy + (a * k), a });
+			}
+			else
+			{
+				points2.push_back({ sx + (a * i),sy + (a * k), a });
+			}
 		}
 	}
 
-	for (auto i = 0; i < 6; i++)
+	for (auto l = 0; l <= 3; l++)
 	{
-		Triangle(points.at(i), colors[i]).Draw();
+		glPushMatrix();
+		glTranslatef(posX, posY, posZ);
+		glRotatef(rotation + (l * 90), 0.0f, 0.0f, 1.0f);
+		for (auto i = 0; i < 3; i++)
+		{
+			Triangle(points1.at(i), colors[i]).Draw();
+		}
+		glPopMatrix();
+		glPushMatrix();
+		glTranslatef(posX, posY, posZ);
+		glRotatef(-rotation + (l * 90), 0.0f, 0.0f, 1.0f);
+		for (auto i = 0; i < 3; i++)
+		{
+			Triangle(points2.at(i), colors[i+3]).Draw();
+		}
+		glPopMatrix();
 	}
 
-	glFlush();//start processing buffered OpenGL routines
+	glutSwapBuffers();
+	glFlush();
 }
 
-void MyInit(void)
+void MyKeyboard(unsigned char key, int x, int y)
 {
-	glClearColor(0.0, 0.0, 0.0, 0.0);//select clearing (background) color
-	glViewport(0, 0, 300, 300);//pocz•tek u.ws. lewy górny róg
-	glMatrixMode(GL_PROJECTION);//Nast•pne 2 wiersze b•d• modyfikowa³y m. PROJECTION
-	glLoadIdentity();//inicjalizacja
-	gluOrtho2D(0.0, 500.0 * 1.2, 0.0, 500.0);
-	glMatrixMode(GL_MODELVIEW); //Nast•pny wiersz b•dzie modyfikowa³ m. MODELVIEW
-	glLoadIdentity();
+	switch (key)
+	{
+	case 'w':
+	std:cout << "moving up" << endl;
+		posY += move_unit;
+		break;
+
+	case 's':
+		cout << "moving down" << endl;
+		posY -= move_unit;
+		break;
+
+	case 'a':
+		cout << "rotate left" << endl;
+		rotation += 5.0f;
+		break;
+
+	case 'd':
+		cout << "rotate right" << endl;
+		rotation -= 5.0f;
+		break;
+	default: break;
+	}
+
+	glutPostRedisplay();
 }
 
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);//single buffer and RGBA
-	glutInitWindowSize(250, 250);//initial window size
-	glutInitWindowPosition(100, 100);
-	glutCreateWindow("My window");//create widnow, hello title bar
+	glutInitWindowSize(700, 700);
+	glutInitWindowPosition(0, 0);
+	glutCreateWindow("Pooler22");
 	MyInit();
 	glutDisplayFunc(MyDisplay);
+	glutKeyboardFunc(MyKeyboard);
 	glutMainLoop();//enter main loop and process events
 	return 0;
 }
