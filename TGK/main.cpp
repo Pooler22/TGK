@@ -10,7 +10,7 @@ using namespace std;
 
 float posX = 100, posY = 100, posZ = 0;
 float rotation = 0.0;
-float move_unit = 0.5;
+float deviation = 0.0;
 
 void MyInit(void)
 {
@@ -43,11 +43,11 @@ void MyDisplay(void)
 	float a = 8;
 	float sx = 0, sy = 0;
 
-	for (auto i = 0, j = 3; i < 3; i++ , j--)
+	for (auto i = 0, j = 3; i < 3; i++, j--)
 	{
 		for (auto k = 0; k < j; k++)
 		{
-			if(i==2||k==2||(k==1 && i == 1))
+			if (i == 2 || k == 2 || (k == 1 && i == 1))
 			{
 				points1.push_back({ sx + (a * i),sy + (a * k), a });
 			}
@@ -62,7 +62,7 @@ void MyDisplay(void)
 	{
 		glPushMatrix();
 		glTranslatef(posX, posY, posZ);
-		glRotatef(rotation + (l * 90), 0.0f, 0.0f, 1.0f);
+		glRotatef((3 * rotation) + (l * 90), 0.0f, 0.0f, 1.0f);
 		for (auto i = 0; i < 3; i++)
 		{
 			Triangle(points1.at(i), colors[i]).Draw();
@@ -73,7 +73,8 @@ void MyDisplay(void)
 		glRotatef(-rotation + (l * 90), 0.0f, 0.0f, 1.0f);
 		for (auto i = 0; i < 3; i++)
 		{
-			Triangle(points2.at(i), colors[i+3]).Draw();
+			glTranslatef(deviation, deviation, posZ);
+			Triangle(points2.at(i), colors[i + 3]).Draw();
 		}
 		glPopMatrix();
 	}
@@ -84,26 +85,21 @@ void MyDisplay(void)
 
 void MyKeyboard(unsigned char key, int x, int y)
 {
+	float move_unit = 1.0;
+	float rotate_unit = 0.03;
+
 	switch (key)
 	{
-	case 'w':
-	std:cout << "moving up" << endl;
-		posY += move_unit;
-		break;
-
-	case 's':
-		cout << "moving down" << endl;
-		posY -= move_unit;
-		break;
-
 	case 'a':
 		cout << "rotate left" << endl;
-		rotation += 5.0f;
+		deviation += rotate_unit;
+		rotation += move_unit;
 		break;
 
 	case 'd':
 		cout << "rotate right" << endl;
-		rotation -= 5.0f;
+		deviation -= rotate_unit;
+		rotation -= move_unit;
 		break;
 	default: break;
 	}
