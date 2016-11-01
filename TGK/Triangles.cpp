@@ -1,4 +1,4 @@
-Ôªø//#include "stdafx.h"
+//#include "stdafx.h"
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
@@ -15,11 +15,11 @@ float deviation = 0.0;
 void MyInit(void)
 {
 	glClearColor(0.0, 0.0, 0.0, 0.0);//select clearing (background) color
-	glViewport(0, 0, 0, 0);//poczatek u.ws. lewy g√≥rny r√≥g
-	glMatrixMode(GL_PROJECTION);//Nastepne 2 wiersze b‚Ä¢d‚Ä¢ modyfikowa≈Çy m. PROJECTION
+	glViewport(0, 0, 0, 0);//poczatek u.ws. lewy gÛrny rÛg
+	glMatrixMode(GL_PROJECTION);//Nastepne 2 wiersze bïdï modyfikowa≥y m. PROJECTION
 	glLoadIdentity();//inicjalizacja
 	gluOrtho2D(0.0, 200.0, 0.0, 200.0);
-	glMatrixMode(GL_MODELVIEW); //Nast‚Ä¢pny wiersz b‚Ä¢dzie modyfikowa≈Ç m. MODELVIEW
+	glMatrixMode(GL_MODELVIEW); //Nastïpny wiersz bïdzie modyfikowa≥ m. MODELVIEW
 	glLoadIdentity();
 }
 
@@ -29,15 +29,16 @@ void MyDisplay(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	float colors[6][4] = {
-		{1,0,0,1},
-		{1,1,0,1},
-		{1,1,1,1},
-		{1,0,1,1},
-		{0,1,0,1},
-		{0,0,1,1}
+		{ 1,0,0,1 },
+		{ 1,1,0,1 },
+		{ 1,1,1,1 },
+		{ 1,0,1,1 },
+		{ 0,1,0,1 },
+		{ 0,0,1,1 }
 	};
 
 	vector<vector<float>> points1;
+	vector<vector<float>> points2;
 
 	float a = 8;
 	float sx = 0, sy = 0;
@@ -46,7 +47,14 @@ void MyDisplay(void)
 	{
 		for (auto k = 0; k < j; k++)
 		{
-			points1.push_back({ sx + (a * i),sy + (a * k), a });
+			if (i == 2 || k == 2 || (k == 1 && i == 1))
+			{
+				points1.push_back({ sx + (a * i),sy + (a * k), a });
+			}
+			else
+			{
+				points2.push_back({ sx + (a * i),sy + (a * k), a });
+			}
 		}
 	}
 
@@ -54,14 +62,19 @@ void MyDisplay(void)
 	{
 		glPushMatrix();
 		glTranslatef(posX, posY, posZ);
-		glRotatef((10 * rotation) + (l * 90), 0.0f, 0.0f, 1.0f);
-		for (auto i = 0; i < 6; i++)
+		glRotatef((3 * rotation) + (l * 90), 0.0f, 0.0f, 1.0f);
+		for (auto i = 0; i < 3; i++)
 		{
-			glTranslatef(points1.at(i)[0], points1.at(i)[1], posZ);
-			glRotatef(-(3 * rotation), 0.0f, 0.0f, 1.0f);
-			glTranslatef(-points1.at(i)[0], -points1.at(i)[1], posZ);
-
 			Triangle(points1.at(i), colors[i]).Draw();
+		}
+		glPopMatrix();
+		glPushMatrix();
+		glTranslatef(posX, posY, posZ);
+		glRotatef(-rotation + (l * 90), 0.0f, 0.0f, 1.0f);
+		for (auto i = 0; i < 3; i++)
+		{
+			glTranslatef(deviation, deviation, posZ);
+			Triangle(points2.at(i), colors[i + 3]).Draw();
 		}
 		glPopMatrix();
 	}
@@ -93,7 +106,6 @@ void MyKeyboard(unsigned char key, int x, int y)
 
 	glutPostRedisplay();
 }
-
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);

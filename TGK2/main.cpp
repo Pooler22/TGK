@@ -28,16 +28,17 @@ void MyDisplay(void)
 	glLoadIdentity();
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	float colors[6][4] = {
-		{1,0,0,1},
-		{1,1,0,1},
-		{1,1,1,1},
-		{1,0,1,1},
-		{0,1,0,1},
-		{0,0,1,1}
+	/*float colors[6][4] = {
+		{ 1,0,0,1 },
+		{ 1,1,0,1 },
+		{ 1,1,1,1 },
+		{ 1,0,1,1 },
+		{ 0,1,0,1 },
+		{ 0,0,1,1 }
 	};
 
 	vector<vector<float>> points1;
+	vector<vector<float>> points2;
 
 	float a = 8;
 	float sx = 0, sy = 0;
@@ -46,7 +47,14 @@ void MyDisplay(void)
 	{
 		for (auto k = 0; k < j; k++)
 		{
-			points1.push_back({ sx + (a * i),sy + (a * k), a });
+			if (i == 2 || k == 2 || (k == 1 && i == 1))
+			{
+				points1.push_back({ sx + (a * i),sy + (a * k), a });
+			}
+			else
+			{
+				points2.push_back({ sx + (a * i),sy + (a * k), a });
+			}
 		}
 	}
 
@@ -54,17 +62,50 @@ void MyDisplay(void)
 	{
 		glPushMatrix();
 		glTranslatef(posX, posY, posZ);
-		glRotatef((10 * rotation) + (l * 90), 0.0f, 0.0f, 1.0f);
-		for (auto i = 0; i < 6; i++)
+		glRotatef((3 * rotation) + (l * 90), 0.0f, 0.0f, 1.0f);
+		for (auto i = 0; i < 3; i++)
 		{
-			glTranslatef(points1.at(i)[0], points1.at(i)[1], posZ);
-			glRotatef(-(3 * rotation), 0.0f, 0.0f, 1.0f);
-			glTranslatef(-points1.at(i)[0], -points1.at(i)[1], posZ);
-
 			Triangle(points1.at(i), colors[i]).Draw();
 		}
 		glPopMatrix();
-	}
+		glPushMatrix();
+		glTranslatef(posX, posY, posZ);
+		glRotatef(-rotation + (l * 90), 0.0f, 0.0f, 1.0f);
+		for (auto i = 0; i < 3; i++)
+		{
+			glTranslatef(deviation, deviation, posZ);
+			Triangle(points2.at(i), colors[i + 3]).Draw();
+		}
+		glPopMatrix();
+	}*/
+
+	glPushMatrix();
+
+
+	glRotatef(posX, 1.0f, 0.0f, 0.0f);
+	glRotatef(posY, 0.0f, 1.0f, 0.0f);
+	glRotatef(posZ, 0.0f, 0.0f, 1.0f);
+
+
+	glLineWidth(3.0);
+	glColor3f(1, 0, 1);
+
+	glBegin(GL_LINE_LOOP);/// don't workglPointSize( 0.0 );
+	GLUquadricObj *quadric;
+	quadric = gluNewQuadric();
+
+	gluQuadricDrawStyle(quadric, GLU_FILL);
+	gluSphere(quadric, 1, 36, 18);
+
+	gluDeleteQuadric(quadric);
+	glEndList();
+
+	glEnd();
+
+
+	glPopMatrix();
+
+
 
 	glutSwapBuffers();
 	glFlush();
