@@ -57,9 +57,9 @@ void MyDisplay(void)
 		glRotatef((10 * rotation) + (l * 90), 0.0f, 0.0f, 1.0f);
 		for (auto i = 0; i < 6; i++)
 		{
-			glTranslatef(points1.at(i)[0], points1.at(i)[1], posZ);
-			glRotatef(-(3 * rotation), 0.0f, 0.0f, 1.0f);
 			glTranslatef(-points1.at(i)[0], -points1.at(i)[1], posZ);
+			glRotatef(-(3 * rotation), 0.0f, 0.0f, 1.0f);
+			glTranslatef(points1.at(i)[0], points1.at(i)[1], posZ);
 
 			Triangle(points1.at(i), colors[i]).Draw();
 		}
