@@ -3,7 +3,6 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <vector>
-#include <iostream>
 #include "Triangle.h"
 
 using namespace std;
@@ -50,20 +49,30 @@ void MyDisplay(void)
 		}
 	}
 
-	for (auto l = 0; l <= 3; l++)
+
+	for (auto l = 0; l < 4; l++)
 	{
-		glPushMatrix();
-		glTranslatef(posX, posY, posZ);
-		glRotatef((10 * rotation) + (l * 90), 0.0f, 0.0f, 1.0f);
+
+
 		for (auto i = 0; i < 6; i++)
 		{
-			glTranslatef(-points1.at(i)[0], -points1.at(i)[1], posZ);
-			glRotatef(-(3 * rotation), 0.0f, 0.0f, 1.0f);
+			glPushMatrix();
+
+			glTranslatef(posX, posY, posZ);
+
+			glRotatef((rotation/3.0) + (l * 90), 0.0f, 0.0f, 1.0f);
+
 			glTranslatef(points1.at(i)[0], points1.at(i)[1], posZ);
+			glTranslatef(deviation, deviation, posZ);
+			glRotatef(-(rotation), 0.0f, 0.0f, 1.0f);
+			glTranslatef(-points1.at(i)[0], -points1.at(i)[1], posZ);
 
 			Triangle(points1.at(i), colors[i]).Draw();
+			glPopMatrix();
+
+
 		}
-		glPopMatrix();
+
 	}
 
 	glutSwapBuffers();
@@ -72,19 +81,19 @@ void MyDisplay(void)
 
 void MyKeyboard(unsigned char key, int x, int y)
 {
-	float move_unit = 1.0;
-	float rotate_unit = 0.03;
+	float move_unit = 3.0;
+	float rotate_unit = 0.09;
 
 	switch (key)
 	{
 	case 'a':
-		cout << "rotate left" << endl;
+		//cout << "rotate left" << endl;
 		deviation += rotate_unit;
 		rotation += move_unit;
 		break;
 
 	case 'd':
-		cout << "rotate right" << endl;
+		//cout << "rotate right" << endl;
 		deviation -= rotate_unit;
 		rotation -= move_unit;
 		break;

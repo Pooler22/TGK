@@ -2,6 +2,7 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include "Triangle.h"
+#include <iostream>
 
 Triangle::Triangle(std::vector<float> abc, float* color1)
 {
