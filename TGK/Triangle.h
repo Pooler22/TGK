@@ -4,10 +4,10 @@
 class Triangle
 {
 public:
-	Triangle(std::vector<float>, float*);
+	Triangle(std::vector<GLfloat>, GLfloat*);
 	void Draw() const;
-	float* a;
-	float* b;
-	float* c;
-	float* color;
+	GLfloat* a;
+	GLfloat* b;
+	GLfloat* c;
+	GLfloat* color;
 };

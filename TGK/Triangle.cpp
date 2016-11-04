@@ -4,12 +4,12 @@
 #include "Triangle.h"
 #include <iostream>
 
-Triangle::Triangle(std::vector<float> abc, float* color1)
+Triangle::Triangle(std::vector<GLfloat> abc, GLfloat* color1)
 {
-	this->a = new float[2]{ abc[0], abc[1] };
-	this->b = new float[2]{ abc[0] + abc[2], abc[1] };
-	this->c = new float[2]{ abc[0], abc[1] + abc[2] };
-	this->color = new float[4]{ color1[0], color1[1],color1[2], color1[3] };
+	this->a = new GLfloat[2]{ abc[0], abc[1] };
+	this->b = new GLfloat[2]{ abc[0] + abc[2], abc[1] };
+	this->c = new GLfloat[2]{ abc[0], abc[1] + abc[2] };
+	this->color = new GLfloat[4]{ color1[0], color1[1],color1[2], color1[3] };
 }
 
 void Triangle::Draw() const
