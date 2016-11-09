@@ -9,24 +9,30 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TGK2", "TGK2\TGK2.vcxproj",
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|ARM = Release|ARM
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E694B989-D01C-40E7-B6D9-933AA57AE44F}.Debug|ARM.ActiveCfg = Debug|Win32
 		{E694B989-D01C-40E7-B6D9-933AA57AE44F}.Debug|x64.ActiveCfg = Debug|x64
 		{E694B989-D01C-40E7-B6D9-933AA57AE44F}.Debug|x64.Build.0 = Debug|x64
 		{E694B989-D01C-40E7-B6D9-933AA57AE44F}.Debug|x86.ActiveCfg = Debug|Win32
 		{E694B989-D01C-40E7-B6D9-933AA57AE44F}.Debug|x86.Build.0 = Debug|Win32
+		{E694B989-D01C-40E7-B6D9-933AA57AE44F}.Release|ARM.ActiveCfg = Release|Win32
 		{E694B989-D01C-40E7-B6D9-933AA57AE44F}.Release|x64.ActiveCfg = Release|x64
 		{E694B989-D01C-40E7-B6D9-933AA57AE44F}.Release|x64.Build.0 = Release|x64
 		{E694B989-D01C-40E7-B6D9-933AA57AE44F}.Release|x86.ActiveCfg = Release|Win32
 		{E694B989-D01C-40E7-B6D9-933AA57AE44F}.Release|x86.Build.0 = Release|Win32
+		{A31576A5-39A6-49F0-B658-29B1FF5C3C80}.Debug|ARM.ActiveCfg = Debug|Win32
 		{A31576A5-39A6-49F0-B658-29B1FF5C3C80}.Debug|x64.ActiveCfg = Debug|x64
 		{A31576A5-39A6-49F0-B658-29B1FF5C3C80}.Debug|x64.Build.0 = Debug|x64
 		{A31576A5-39A6-49F0-B658-29B1FF5C3C80}.Debug|x86.ActiveCfg = Debug|Win32
 		{A31576A5-39A6-49F0-B658-29B1FF5C3C80}.Debug|x86.Build.0 = Debug|Win32
+		{A31576A5-39A6-49F0-B658-29B1FF5C3C80}.Release|ARM.ActiveCfg = Release|Win32
 		{A31576A5-39A6-49F0-B658-29B1FF5C3C80}.Release|x64.ActiveCfg = Release|x64
 		{A31576A5-39A6-49F0-B658-29B1FF5C3C80}.Release|x64.Build.0 = Release|x64
 		{A31576A5-39A6-49F0-B658-29B1FF5C3C80}.Release|x86.ActiveCfg = Release|Win32
