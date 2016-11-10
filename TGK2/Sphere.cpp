@@ -1,24 +1,34 @@
 #pragma once
-#include <GL/freeglut.h>
+#include "Texturable.cpp"
 
-class Sphere
+class Sphere : public Texturable
 {
 public:
-	Sphere::Sphere(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat n) : x(&x), y(&y), z(&z), r(&r), n(&n)
+	explicit Sphere::Sphere(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLuint texture): Texturable(texture), x(x), y(y), z(z),r(r)
 	{
-
+		glEnable(GL_TEXTURE_2D);
+		sphereObject = gluNewQuadric();
+		gluQuadricDrawStyle(sphereObject, GLU_FILL);
+		gluQuadricTexture(sphereObject, texture);
+		gluQuadricNormals(sphereObject, GLU_SMOOTH);
 	}
 
-	void Sphere::Draw() const
+	void Sphere::Draw(GLfloat ruch) const
 	{
-		glBegin(GL_QUADS);
+		Texturable::Draw();
 
-		glEnd();
+		glPushMatrix();
+		
+		glTranslatef(x, y + ruch, z);
+		glRotatef(90, 1, 0, 0);
+		gluSphere(sphereObject, r, 10, 10);
+
+		glPopMatrix();
 	}
 
-	GLfloat* x;
-	GLfloat* y;
-	GLfloat* z;
-	GLfloat* r;
-	GLfloat* n;
+	GLUquadric* sphereObject;
+	GLfloat x; 
+	GLfloat y;
+	GLfloat z;
+	GLfloat r;
 };

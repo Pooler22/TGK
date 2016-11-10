@@ -1,3 +1,4 @@
+#pragma once
 #include <GL/freeglut.h>
 #include <vector>
 #include "Point.cpp"
@@ -20,13 +21,10 @@ public:
 
 		glTexCoord2f(0.0, 0.0);
 		points.at(0).Draw();
-
 		glTexCoord2f(0.0, 1.0);
 		points.at(1).Draw();
-
 		glTexCoord2f(1.0, 1.0);
 		points.at(2).Draw();
-
 		glTexCoord2f(1.0, 0.0);
 		points.at(3).Draw();
 

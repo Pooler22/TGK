@@ -1,12 +1,14 @@
+#pragma once
 #include <GL/freeglut.h>
 #include <vector>
 #include <memory>
+#include "Texturable.cpp"
 #include "Square.cpp"
 
-class Cube
+class Cube: public Texturable
 {
 public:
-	Cube::Cube(GLfloat x, GLfloat y, GLfloat z, GLfloat n)
+	Cube::Cube(GLfloat x, GLfloat y, GLfloat z, GLfloat n, GLuint texure) : Texturable(texure)
 	{
 		squares = std::make_unique<std::vector<Square>>();
 
@@ -50,10 +52,13 @@ public:
 
 	void Cube::Draw() const
 	{
+		glPushMatrix();
+		Texturable::Draw();
 		for (auto square : *squares)
 		{
 			square.Draw();
 		}
+		glPopMatrix();
 	}
 
 	std::unique_ptr<std::vector<Square>> squares;

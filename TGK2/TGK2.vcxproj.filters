@@ -5,14 +5,12 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Square.cpp" />
     <ClCompile Include="Point.cpp" />
+    <ClCompile Include="Spring.cpp" />
+    <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Texturable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="textures">
-      <UniqueIdentifier>{2d0bc41e-a020-437e-9bfb-a65fb6b94500}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="bricks.bmp" />
