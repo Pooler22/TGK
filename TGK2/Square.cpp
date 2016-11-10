@@ -1,37 +1,37 @@
-#pragma once
 #include <GL/freeglut.h>
+#include <vector>
+#include "Point.cpp"
 
 class Square
 {
 public:
-	Square::Square(GLfloat x, GLfloat y, GLfloat z, GLfloat n) : x(&x), y(&y), z(&z), n(&n)
+	explicit Square::Square(GLfloat n[4][3])
 	{
-
+		points = std::vector<Point>();
+		for (auto i = 0; i < 4; i++)
+		{
+			points.push_back(Point(n[i][0], n[i][1], n[i][2]));
+		}
 	}
 
 	void Square::Draw() const
 	{
-		glTranslatef(0.0, 26.5, 0.0);
-		//podstawa
 		glBegin(GL_QUADS);
 
 		glTexCoord2f(0.0, 0.0);
-		glVertex3f(-*x, -*y, -*z);
+		points.at(0).Draw();
 
 		glTexCoord2f(0.0, 1.0);
-		glVertex3f(-*x, -*y, *z);
+		points.at(1).Draw();
 
 		glTexCoord2f(1.0, 1.0);
-		glVertex3f(*x, -*y, *z);
+		points.at(2).Draw();
 
 		glTexCoord2f(1.0, 0.0);
-		glVertex3f(*x, -*y, -*z);
+		points.at(3).Draw();
 
 		glEnd();
 	}
 
-	GLfloat* x;
-	GLfloat* y;
-	GLfloat* z;
-	GLfloat* n;
+	std::vector<Point> points;
 };

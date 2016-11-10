@@ -1,77 +1,59 @@
-#pragma once
 #include <GL/freeglut.h>
 #include <vector>
-#include "Square.cpp"
 #include <memory>
+#include "Square.cpp"
 
 class Cube
 {
 public:
 	Cube::Cube(GLfloat x, GLfloat y, GLfloat z, GLfloat n)
 	{
-//		squares(new std::vector<Square>);
-		//squares->push_back(*new Square(5, 5, 5, 5));
-		
+		squares = std::make_unique<std::vector<Square>>();
+
+		squares->push_back(Square(new GLfloat[4][3]{
+			{x - n,y - n,z - n},
+			{x + n,y - n,z - n},
+			{x + n,y + n,z - n},
+			{x - n,y + n,z - n}
+		}));
+		squares->push_back(Square(new GLfloat[4][3]{
+			{x - n,y - n,z + n},
+			{x + n,y - n,z + n},
+			{x + n,y + n,z + n},
+			{x - n,y + n,z + n}
+		}));
+		squares->push_back(Square(new GLfloat[4][3]{
+			{x - n,y - n,z - n},
+			{x - n,y + n,z - n},
+			{x - n,y + n,z + n},
+			{x - n,y - n,z + n}
+		}));
+		squares->push_back(Square(new GLfloat[4][3]{
+			{x + n,y - n,z - n},
+			{x + n,y + n,z - n},
+			{x + n,y + n,z + n},
+			{x + n,y - n,z + n}
+		}));
+		squares->push_back(Square(new GLfloat[4][3]{
+			{x - n,y - n,z - n},
+			{x + n,y - n,z - n},
+			{x + n,y - n,z + n},
+			{x - n,y - n,z + n}
+		}));
+		squares->push_back(Square(new GLfloat[4][3]{
+			{x - n,y + n,z - n},
+			{x + n,y + n,z + n},
+			{x + n,y + n,z + n},
+			{x - n,y + n,z - n}
+		}));
 	}
 
 	void Cube::Draw() const
 	{
-		
-		// lewa œciana
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0, 0.0);
-		glVertex3f(-5.0, -5.0, -5.0);
-		glTexCoord2f(0.0, 1.0);
-		glVertex3f(-5.0, -5.0, 5.0);
-		glTexCoord2f(1.0, 1.0);
-		glVertex3f(-5.0, 5.0, 5.0);
-		glTexCoord2f(1.0, 0.0);
-		glVertex3f(-5.0, 5.0, -5.0);
-		glEnd();
-		// tylna œciana
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0, 0.0);
-		glVertex3f(-5.0, -5.0, -5.0);
-		glTexCoord2f(0.0, 1.0);
-		glVertex3f(-5.0, 5.0, -5.0);
-		glTexCoord2f(1.0, 1.0);
-		glVertex3f(5.0, 5.0, -5.0);
-		glTexCoord2f(1.0, 0.0);
-		glVertex3f(5.0, -5.0, -5.0);
-		glEnd();
-
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0, 0.0);
-		glVertex3f(-5.0, -5.0, 5.0);
-		glTexCoord2f(0.0, 1.0);
-		glVertex3f(-5.0, 5.0, 5.0);
-		glTexCoord2f(1.0, 1.0);
-		glVertex3f(5.0, 5.0, 5.0);
-		glTexCoord2f(1.0, 0.0);
-		glVertex3f(5.0, -5.0, 5.0);
-		glEnd();
-
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0, 0.0);
-		glVertex3f(5.0, -5.0, -5.0);
-		glTexCoord2f(0.0, 1.0);
-		glVertex3f(5.0, -5.0, 5.0);
-		glTexCoord2f(1.0, 1.0);
-		glVertex3f(5.0, 5.0, 5.0);
-		glTexCoord2f(1.0, 0.0);
-		glVertex3f(5.0, 5.0, -5.0);
-		glEnd();
-
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0, 0.0);
-		glVertex3f(-5.0, 5.0, -5.0);
-		glTexCoord2f(0.0, 1.0);
-		glVertex3f(-5.0, 5.0, 5.0);
-		glTexCoord2f(1.0, 1.0);
-		glVertex3f(5.0, 5.0, 5.0);
-		glTexCoord2f(1.0, 0.0);
-		glVertex3f(5.0, 5.0, -5.0);
-		glEnd();
+		for (auto square : *squares)
+		{
+			square.Draw();
+		}
 	}
 
 	std::unique_ptr<std::vector<Square>> squares;

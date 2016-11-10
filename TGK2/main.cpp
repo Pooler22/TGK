@@ -1,11 +1,7 @@
-﻿//#include <GL/glew.h>
-#include <GL/freeglut.h>
-//#include <GL/glu.h>
-//#include <GL/gl.h>
+﻿#include <GL/freeglut.h>
 #include <iostream>
 #include "Cube.cpp"
 
-class Cube;
 static GLfloat ruch = 0.0;
 static GLfloat ruch2 = 0.0;
 
@@ -67,23 +63,6 @@ GLuint LoadTexture(const char* filename)
 	free(data);
 
 	return texture;
-}
-
-
-void DiaplayBlock()
-{
-	auto block = new Cube(5, 5, 5, 5);
-	glPushMatrix();
-	block->Draw();
-	glPopMatrix();
-}
-
-void DiaplaySpring()
-{
-}
-
-void DiaplaySphere()
-{
 }
 
 void Display()
@@ -214,30 +193,39 @@ void Display()
 	};
 	glPopMatrix();
 
+
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lightColor);
 
-	DiaplayBlock();
 
+	auto block = new Cube(0, 0, 0, 5);
+	
+	glTranslatef(0.0, 26.5, 0.0);
+	
 	glPushMatrix();
-	//glDisable(GL_DEPTH_TEST);
-	glEnable(GL_STENCIL_TEST);
-	glStencilFunc(GL_EQUAL, 1, 1);
-	// Make the stencil buffer not change
-	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-	glDisable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE, GL_ONE_MINUS_DST_COLOR);
-	glTranslatef(0.0, -8.0 + ruch, 0.0);
-	glRotatef(90, 1.0, 0.0, 0.0);
-	gluSphere(sphere, 5.0, 40, 40);
-	glDisable(GL_BLEND);
-	glEnable(GL_TEXTURE_2D);
-	//glEnable(GL_DEPTH_TEST);
-	glDisable(GL_STENCIL_TEST);
+	block->Draw();
 	glPopMatrix();
+
+	//glPushMatrix();
+	////glDisable(GL_DEPTH_TEST);
+	//glEnable(GL_STENCIL_TEST);
+	//glStencilFunc(GL_EQUAL, 1, 1);
+	//// Make the stencil buffer not change
+	//glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	//glDisable(GL_TEXTURE_2D);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_ONE, GL_ONE_MINUS_DST_COLOR);
+	//glTranslatef(0.0, -8.0 + ruch, 0.0);
+	//glRotatef(90, 1.0, 0.0, 0.0);
+	//gluSphere(sphere, 5.0, 40, 40);
+	//glDisable(GL_BLEND);
+	//glEnable(GL_TEXTURE_2D);
+	////glEnable(GL_DEPTH_TEST);
+	//glDisable(GL_STENCIL_TEST);
+	//glPopMatrix();
+
 
 	glutSwapBuffers();
 	glFlush();
