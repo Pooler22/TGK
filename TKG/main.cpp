@@ -29,7 +29,7 @@ void Display(void)
 	std::vector<std::vector<GLfloat>> triangles;
 	GLfloat a = 8, sx = 0, sy = 0, a1 = 3, a2 = 90;
 	auto trianglesRows = 3, trianglesCols = 3, quadrantsNumber = 4;
-	
+
 	glLoadIdentity();
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -37,12 +37,12 @@ void Display(void)
 	{
 		for (auto j = 0; j < trianglesCols - i; j++)
 		{
-			triangles.push_back({sx + (a * i),sy + (a * j), a});
+			triangles.push_back({ sx + (a * i),sy + (a * j), a });
 		}
 	}
 	for (auto l = 0; l < quadrantsNumber; l++)
 	{
-		for (auto k = 0; k <  triangles.size(); k++)
+		for (auto k = 0; k < triangles.size(); k++)
 		{
 			glPushMatrix();
 

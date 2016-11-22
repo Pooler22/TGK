@@ -1,11 +1,11 @@
-﻿#pragma once
-#include <GL/freeglut.h>
+﻿#include <GL/freeglut.h>
 #include <iostream>
 #include "Cube.cpp"
 #include "Spring.cpp"
 #include "Sphere.cpp"
 
-static GLfloat move = 0.0;
+static GLfloat move = 0.0f;
+auto mode = false;
 
 Sphere* sphere = nullptr;
 Spring* spring = nullptr;
@@ -49,9 +49,9 @@ GLuint LoadTexture(const char* filename)
 
 void MyInit()
 {
-	sphere = new Sphere(0, -8, -45, 6, LoadTexture("wood.bmp"));
-	spring = new Spring(0, 0, -45, LoadTexture("steel.bmp"));
-	cube = new Cube(0, 26.5, -45, 5, LoadTexture("wood.bmp"));
+	sphere = new Sphere(0, -18, -25, 6, LoadTexture("wood.bmp"));
+	spring = new Spring(0, -10, -25, LoadTexture("steel.bmp"));
+	cube = new Cube(0, 16, -25, 5, LoadTexture("wood.bmp"));
 }
 
 void Display()
@@ -69,13 +69,22 @@ void Display()
 	glFlush();
 }
 
+void Keyboard(unsigned char key, int x, int y) {
+
+	switch (key) {
+	case 'a':
+		mode = !mode;
+	default: break;
+	}
+}
+
 void Reshape(int width, int height)
 {
 	glClearColor(0, 0, 0, 0);
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glFrustum(-10, 10, -10, 10, 10, 100);
+	glFrustum(-10, 10, -10, 10, 5, 40);
 	Display();
 }
 
@@ -113,14 +122,13 @@ void Update(int value)
 	}
 
 	glutPostRedisplay();
-	glutTimerFunc(25, Update, 0);
+	glutTimerFunc(20, Update, 0);
 }
-
 
 int main(int argc, char* argv[])
 {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(700, 700);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("Pooler22 - spring");
@@ -128,6 +136,8 @@ int main(int argc, char* argv[])
 	MyInit();
 	glutDisplayFunc(Display);
 	glutReshapeFunc(Reshape);
+	glutKeyboardFunc(Keyboard);
+
 	glutTimerFunc(25, Update, 0);
 
 	glEnable(GL_DEPTH_TEST);

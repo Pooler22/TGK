@@ -16,17 +16,15 @@ public:
 		gluQuadricNormals(sphereObject, GLU_SMOOTH);
 	}
 
-	void Spring::Draw(GLfloat move)
-	{
-		static auto delta = 0.1f;
 
-		Texturable::Draw();
-		
-		glPushMatrix();
-		
-		glTranslatef(x, y, z);
-		glRotatef(90, 0, 1, 0);
-		
+	void Spring::Draw(GLfloat move)
+	{		
+		auto precise = 0.1f;
+		auto u = 0;
+		auto sinU = sin(u);
+		auto cosU = cos(u);
+		auto ruch2 = move;
+
 		if (move >= 0)
 		{
 			w_move = move / (100 * PI);
@@ -35,29 +33,36 @@ public:
 		{
 			w_move = -1 * move / (100 * PI);
 		}
-		GLfloat ruch2 = move;
 
-		for (GLfloat t = 0; t < (10 * PI); t += delta)
+		Texturable::Draw();
+
+		glPushMatrix();
+		glTranslatef(x, y, z);
+		//glRotatef(90, 0, 1, 0);
+		
+		for (GLfloat t = 0; t < 10 * PI; t += precise)
 		{
-			GLfloat u = 0;
-			glPushMatrix();
-			glTranslatef(cos(t) * (3 + cos(u)), (0.6f * t + sin(u)) + (ruch2), sin(t) * (3 + cos(u)));
-			gluSphere(sphereObject, 1, 20, 10);
-			glPopMatrix();
+			if(t < PI)
+			{
+				glPushMatrix();
+				glTranslatef(0, -t + move, 0);
+				gluSphere(sphereObject, 1, 20, 10);
+				glPopMatrix();
+			}
+
+			auto sinT = sin(t);
+			auto cosT = cos(t);
 
 			glPushMatrix();
-			if (t < PI)
-			{
-				glTranslatef(0, (-t) + move, 0);
-				gluSphere(sphereObject, 1, 20, 10);
-			}
+			glTranslatef(cosT * (3.f + cosU), 0.6f * t + sinU + ruch2, sinT * (3.f + cosU));
+			gluSphere(sphereObject, 1, 10, 10);
 			glPopMatrix();
 
 			glPushMatrix();
 			if (t < 1.2 * PI)
 			{
 				glTranslatef(t, move, 0);
-				gluSphere(sphereObject, 1, 20, 10);
+				gluSphere(sphereObject, 1, 10, 10);
 			}
 			glPopMatrix();
 
@@ -65,7 +70,7 @@ public:
 			if (t < (1.3 * PI))
 			{
 				glTranslatef(t, 18.9f, 0);
-				gluSphere(sphereObject, 1, 20, 10);
+				gluSphere(sphereObject, 1, 10, 10);
 			}
 			glPopMatrix();
 
@@ -73,15 +78,16 @@ public:
 			if (t > (6 * PI) && t < (7 * PI))
 			{
 				glTranslatef(0, t, 0);
-				gluSphere(sphereObject, 1, 20, 10);
+				gluSphere(sphereObject, 1, 10, 10);
 			}
 			glPopMatrix();
 
 			if (move > 0)
-				ruch2 = ruch2 - w_move;
+				ruch2 -= w_move;
 			else if (move < 0)
-				ruch2 = ruch2 + w_move;
+				ruch2 += w_move;
 		};
+
 		glPopMatrix();
 	}
 
@@ -89,7 +95,6 @@ public:
 	GLfloat x;
 	GLfloat y;
 	GLfloat z;
-	
-	
+
 	GLfloat w_move;
 };

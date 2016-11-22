@@ -15,19 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <None Include="main.m" />
+    <None Include="packages.config" />
+    <None Include="f-16.mtl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="render.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Triangle.cpp">
+    <ClCompile Include="render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Triangle.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    <Object Include="f-16.obj" />
   </ItemGroup>
 </Project>

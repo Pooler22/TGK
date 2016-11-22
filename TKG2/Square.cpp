@@ -17,6 +17,11 @@ public:
 
 	void Square::Draw() const
 	{
+		glTranslatef(translateX, translateY, translateZ);
+		glRotatef(rotateX, 1.0, 0, 0);
+		glRotatef(rotateZ, 0, 0, 1.0);
+		glRotatef(rotateY, 0, 1.0, 0);
+
 		glBegin(GL_QUADS);
 
 		glTexCoord2f(0.0, 0.0);
