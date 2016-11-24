@@ -36,5 +36,12 @@ public:
 		glEnd();
 	}
 
+	GLfloat translateX = 0;
+	GLfloat translateY = 0;
+	GLfloat translateZ = 0;
+	GLfloat rotateX = 0;
+	GLfloat rotateY = 0;
+	GLfloat rotateZ = 0;
+
 	std::vector<Point> points;
 };

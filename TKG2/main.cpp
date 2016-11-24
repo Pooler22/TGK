@@ -75,6 +75,8 @@ void Keyboard(unsigned char key, int x, int y) {
 	case 'a':
 		mode = !mode;
 	default: break;
+	case 27:
+		exit(0);
 	}
 }
 
