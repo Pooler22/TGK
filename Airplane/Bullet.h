@@ -1,20 +1,20 @@
 #ifndef Bullet_h
 #define Bullet_h
 
-#include "Vector3.h"
+#include "glm/glm.hpp"
 
 class Bullet
 {
 public:
 	int counter;
 	bool shooted;
-	Vector3 cood;
-	Vector3 forward;
+	glm::vec3 cood;
+	glm::vec3 forward;
 	float moveSpeed;
 	Bullet();
-	explicit Bullet(Vector3 vec);
+	explicit Bullet(glm::vec3 vec);
 	void moveForward();
-	void setForward(Vector3 vec);
+	void setForward(glm::vec3 vec);
 	void drawBullet();
 	void setShooted(bool b);
 };

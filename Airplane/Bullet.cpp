@@ -3,21 +3,21 @@
 
 Bullet::Bullet(): shooted(false)
 {
-	cood = Vector3(0, 0, 0);
-	forward = Vector3(1, 0, 0);
+	cood = glm::vec3(0, 0, 0);
+	forward = glm::vec3(1, 0, 0);
 	moveSpeed = 0.1f;
 	counter = 0;
 }
 
-Bullet::Bullet(Vector3 vec): shooted(false)
+Bullet::Bullet(glm::vec3 vec): shooted(false)
 {
 	cood = vec;
-	forward = Vector3(1, 0, 0);
+	forward = glm::vec3(1, 0, 0);
 	moveSpeed = 0.1f;
 	counter = 0;
 }
 
-void Bullet::setForward(Vector3 vec)
+void Bullet::setForward(glm::vec3 vec)
 {
 	forward = vec;
 }
