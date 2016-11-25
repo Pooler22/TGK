@@ -2,12 +2,11 @@
 #define Camera_h
 
 #include "glm/glm.hpp"
-#include "Quaternion.h"
 
 class Camera
 {
 public:
-	Quaternion rotation;
+	glm::vec4 rotation;
 	glm::vec3 position;
 	glm::vec3 lookAt;
 	glm::vec3 up;
