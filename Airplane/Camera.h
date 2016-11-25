@@ -10,6 +10,7 @@ public:
 	glm::vec3 position;
 	glm::vec3 lookAt;
 	glm::vec3 up;
+
 	Camera();
 	void roll(float r);
 	void pitch(float r);

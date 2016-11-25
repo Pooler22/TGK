@@ -34,7 +34,7 @@ void AirPlane::updatePitch(float deg)
 
 void AirPlane::moveForward()
 {
-	cam.position = cam.position + cam.lookAt * moveSpeed;
+	cam.position += cam.lookAt * moveSpeed;
 }
 
 void AirPlane::shootBullet()
@@ -43,9 +43,9 @@ void AirPlane::shootBullet()
 	{
 		if (!bul[i].shooted)
 		{
-			bul[i] = Bullet(cam.position); // Set the initialize location of the bullet
-			bul[i].setForward(cam.lookAt); // Set the foward vector of the bullet
-			bul[i].setShooted(true); // Set a bool the bullet shooted or not.
+			bul[i] = Bullet(cam.position);
+			bul[i].setForward(cam.lookAt);
+			bul[i].setShooted(true);
 		}
 	}
 }

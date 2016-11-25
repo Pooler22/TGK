@@ -13,9 +13,9 @@ void DrawString::draw(string str, int w, int h, int x, int y)
 	glLoadIdentity();
 
 	glRasterPos2f(x, y);
-	for (auto i = 0; i < int(str.size()); ++i)
+	for (auto i : str)
 	{
-		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
+		glutBitmapCharacter(GLUT_BITMAP_9_BY_15, i);
 	}
 
 	glPopMatrix();

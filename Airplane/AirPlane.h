@@ -12,6 +12,7 @@ public:
 	float moveSpeed;
 	Camera cam;
 	Bullet bul[MAX_BULLET];
+
 	AirPlane();
 	void updateCamera() const;
 	void updateRoll(float deg);

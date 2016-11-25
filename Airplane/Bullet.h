@@ -8,11 +8,12 @@ class Bullet
 public:
 	int counter;
 	bool shooted;
+	float moveSpeed;
 	glm::vec3 cood;
 	glm::vec3 forward;
-	float moveSpeed;
+
 	Bullet();
-	explicit Bullet(glm::vec3 vec);
+	explicit Bullet(glm::vec3);
 	void moveForward();
 	void setForward(glm::vec3 vec);
 	void drawBullet();

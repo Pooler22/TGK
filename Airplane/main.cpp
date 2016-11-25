@@ -27,7 +27,7 @@ float randomize(float x, float y)
 {
 	static auto a = 1688135690, b = 11176901;
 	srand(((int(x) * a) % b) - ((int(y) * b) % a));
-	return 2.0 * (float(rand()) / float(RAND_MAX)) - 1.0;
+	return 2.0f * (float(rand()) / float(RAND_MAX)) - 1.0f;
 }
 
 void mountain(int i, int j, int s)
@@ -45,11 +45,11 @@ void mountain(int i, int j, int s)
 		auto x23 = 0.5f * (x2 + x3);
 		auto x0123 = 0.25f * (x0 + x1 + x2 + x3);
 
-		x01.z += 0.5 * (float(s) / res) * randomize(x01.x, x01.y);
-		x02.z += 0.5 * (float(s) / res) * randomize(x02.x, x02.y);
-		x13.z += 0.5 * (float(s) / res) * randomize(x13.x, x13.y);
-		x23.z += 0.5 * (float(s) / res) * randomize(x23.x, x23.y);
-		x0123.z += 0.5 * (float(s) / res) * randomize(x0123.x, x0123.y);
+		x01.z += 0.5f * (float(s) / res) * randomize(x01.x, x01.y);
+		x02.z += 0.5f * (float(s) / res) * randomize(x02.x, x02.y);
+		x13.z += 0.5f * (float(s) / res) * randomize(x13.x, x13.y);
+		x23.z += 0.5f * (float(s) / res) * randomize(x23.x, x23.y);
+		x0123.z += 0.5f * (float(s) / res) * randomize(x0123.x, x0123.y);
 
 		verts[ADDR(i+s/2,j,0)] = x01.x;
 		verts[ADDR(i+s/2,j,1)] = x01.y;
@@ -90,7 +90,7 @@ void mountain(int i, int j, int s)
 		}
 		else
 		{
-			dx = (verts[ADDR(i+1,j,2)] - verts[ADDR(i-1,j,2)]) / 2.0;
+			dx = (verts[ADDR(i+1,j,2)] - verts[ADDR(i-1,j,2)]) / 2.0f;
 		}
 
 		if (j == 0)
@@ -103,12 +103,12 @@ void mountain(int i, int j, int s)
 		}
 		else
 		{
-			dy = (verts[ADDR(i,j+1,2)] - verts[ADDR(i,j-1,2)]) / 2.0;
+			dy = (verts[ADDR(i,j+1,2)] - verts[ADDR(i,j-1,2)]) / 2.0f;
 		}
 
 		dx *= res;
 		dy *= res;
-		dz = 1.0 / sqrt(dx * dx + dy * dy + 1.0);
+		dz = 1.0f / sqrt(dx * dx + dy * dy + 1.0f);
 		dx *= dz;
 		dy *= dz;
 
@@ -165,9 +165,9 @@ void makemountain()
 
 void init(void)
 {
-	GLfloat amb[] = {0.2,0.2,0.2};
-	GLfloat diff[] = {1.0,1.0,1.0};
-	GLfloat spec[] = {1.0,1.0,1.0};
+	GLfloat amb[] = {0.2f,0.2f,0.2f};
+	GLfloat diff[] = {1.0f,1.0f,1.0f};
+	GLfloat spec[] = {1.0f,1.0f,1.0f};
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -188,18 +188,18 @@ void init(void)
 void drawStrings()
 {
 	glColor3d(0.2, 0.2, 0.2);
-	ds.draw("  h   key to show/hide help", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 5);
+	ds.draw("    h - show/hide help", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 5);
 	if (showHelp)
 	{
-		ds.draw("  UP  key to pitch down", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 10);
-		ds.draw(" Down key to pitch up", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 14);
-		ds.draw(" Left key to roll left", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 18);
-		ds.draw("Right key to roll right", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 22);
-		ds.draw("  +   key to sealevel up", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 26);
-		ds.draw("  -   key to sealevel down", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 30);
-		ds.draw("  f   key to resolution up", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 34);
-		ds.draw("  c   key to resolution down", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 38);
-		ds.draw("Space key to shoot a bullet", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 42);
+		ds.draw("   UP - pitch down", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 10);
+		ds.draw(" Down - pitch up", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 14);
+		ds.draw(" Left - roll left", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 18);
+		ds.draw("Right - roll right", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 22);
+		ds.draw("  +   - sea level up", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 26);
+		ds.draw("  -   - sea level down", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 30);
+		ds.draw("  f   - resolution up", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 34);
+		ds.draw("  c   - resolution down", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 38);
+		ds.draw("Space - shoot", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 42);
 	}
 }
 
@@ -252,7 +252,7 @@ void display(void)
 	keyboardFlag();
 	ap.moveForward();
 	ap.updateCamera();
-//	ap.drawPlain();
+	//	ap.drawPlain();
 	drawStrings();
 
 	// send the light position down as if it was a vertex in world coordinates

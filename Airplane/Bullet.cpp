@@ -1,20 +1,22 @@
 #include "Bullet.h"
 #include <gl/freeglut.h>
 
-Bullet::Bullet(): shooted(false)
+Bullet::Bullet()
 {
 	cood = glm::vec3(0, 0, 0);
 	forward = glm::vec3(1, 0, 0);
 	moveSpeed = 0.1f;
 	counter = 0;
+	shooted = false;
 }
 
-Bullet::Bullet(glm::vec3 vec): shooted(false)
+Bullet::Bullet(glm::vec3 vec)
 {
 	cood = vec;
 	forward = glm::vec3(1, 0, 0);
 	moveSpeed = 0.1f;
 	counter = 0;
+	shooted = false;
 }
 
 void Bullet::setForward(glm::vec3 vec)
@@ -24,7 +26,7 @@ void Bullet::setForward(glm::vec3 vec)
 
 void Bullet::moveForward()
 {
-	cood = cood + forward * moveSpeed;
+	cood += forward * moveSpeed;
 }
 
 void Bullet::drawBullet()
@@ -41,7 +43,7 @@ void Bullet::drawBullet()
 	}
 }
 
-void Bullet::setShooted(bool b)
+void Bullet::setShooted(bool val)
 {
-	shooted = b;
+	shooted = val;
 }

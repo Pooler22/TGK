@@ -3,19 +3,19 @@
 
 Camera::Camera()
 {
-	position = glm::vec3(0, 0.05, 0);
-	rotation = normalize(glm::vec4(0.0, 0.0, 0.0, 1.0));
+	position = glm::vec3(0, 0, 0);
+	rotation = glm::vec4(0.0, 0.0, 0.0, 1.0);
 	lookAt = glm::vec3(1, 0, 0);
 	up = glm::vec3(0, 1, 0);
 }
 
-glm::vec4 op1(glm::vec4& rq1, glm::vec4& rq)
+glm::vec4 op1(glm::vec4& rq1, glm::vec4& rq2)
 {
 	return glm::vec4(
-		rq1.w * rq.x + rq1.x * rq.w + rq1.y * rq.z - rq1.z * rq.y,
-		rq1.w * rq.y + rq1.y * rq.w + rq1.z * rq.x - rq1.x * rq.z,
-		rq1.w * rq.z + rq1.z * rq.w + rq1.x * rq.y - rq1.y * rq.x,
-		rq1.w * rq.w - rq1.x * rq.x - rq1.y * rq.y - rq1.z * rq.z
+		rq1.w * rq2.x + rq1.x * rq2.w + rq1.y * rq2.z - rq1.z * rq2.y,
+		rq1.w * rq2.y + rq1.y * rq2.w + rq1.z * rq2.x - rq1.x * rq2.z,
+		rq1.w * rq2.z + rq1.z * rq2.w + rq1.x * rq2.y - rq1.y * rq2.x,
+		rq1.w * rq2.w - rq1.x * rq2.x - rq1.y * rq2.y - rq1.z * rq2.z
 	);
 }
 
