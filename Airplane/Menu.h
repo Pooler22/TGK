@@ -1,7 +1,6 @@
 #ifndef Menu_h
 #define Menu_h
 
-#include <gl/freeglut.h>
 #include "DrawString.h"
 
 class Menu

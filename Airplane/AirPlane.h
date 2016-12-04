@@ -1,18 +1,15 @@
 #ifndef AirPlane_h
 #define AirPlane_h
 
-#define MAX_BULLET 1
-
 #include "Camera.h"
 #include "Bullet.h"
 
 class AirPlane
 {
 public:
-	bool flaing;
 	float moveSpeed;
 	Camera cam;
-	Bullet bul[MAX_BULLET];
+	Bullet bul;
 
 	AirPlane();
 	void updateCamera() const;

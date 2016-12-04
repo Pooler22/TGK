@@ -5,7 +5,7 @@
 float Mountain::randomize(float x, float y)
 {
 	static auto a = 1688135690, b = 11176901;
-	srand(((int(x) * a) % b) - ((int(y) * b) % a));
+	srand(int(x) * a % b - int(y) * b % a);
 	return 2.0f * (float(rand()) / float(RAND_MAX)) - 1.0f;
 }
 

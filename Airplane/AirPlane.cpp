@@ -5,17 +5,16 @@
 AirPlane::AirPlane()
 {
 	moveSpeed = 0.005f;
-	flaing = true;
 }
 
 void AirPlane::increaseSpeed()
 {
-	moveSpeed += 0.001;
+	moveSpeed += 0.001f;
 }
 
 void AirPlane::decreaseSpeed()
 {
-	moveSpeed -= 0.001;
+	moveSpeed -= 0.001f;
 }
 
 void AirPlane::updateCamera() const
@@ -46,34 +45,28 @@ void AirPlane::updatePitch(float deg)
 void AirPlane::moveForward(float sealevel)
 {
 	cam.position += cam.lookAt * moveSpeed;
-	if(abs(sealevel - cam.position.z) > 0.01)
+	if (abs(sealevel - cam.position.z) > 0.01f)
 	{
-		cam.position.z -= 0.001;
+		cam.position.z -= 0.001f;
 	}
 }
 
 void AirPlane::shootBullet()
 {
-	for (auto i = 0; i < MAX_BULLET; i++)
+	if (!bul.shooted)
 	{
-		if (!bul[i].shooted)
-		{
-			bul[i] = Bullet(cam.position);
-			bul[i].setForward(cam.lookAt);
-			bul[i].setShooted(true);
-		}
+		bul = Bullet(cam.position);
+		bul.setForward(cam.lookAt);
+		bul.setShooted(true);
 	}
 }
 
 void AirPlane::drawBullet()
 {
-	for (auto i = 0; i < MAX_BULLET; i++)
+	if (bul.shooted)
 	{
-		if (bul[i].shooted)
-		{
-			bul[i].moveForward();
-			bul[i].drawBullet();
-		}
+		bul.moveForward();
+		bul.drawBullet();
 	}
 }
 

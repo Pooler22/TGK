@@ -96,7 +96,7 @@ void System::createParticles(void)
 {
 	systemPull[Y] = 0.0005;
 	systemPull[X] = systemPull[Z] = 0.0f;
-	for (auto i =0 ; i < MAX_PARTICLES; i++)
+	for (auto i = 0; i < MAX_PARTICLES; i++)
 	{
 		createParticle(&particles[i]);
 	}
@@ -108,14 +108,14 @@ void System::createParticles(void)
 */
 void System::updateParticles(void)
 {
-	for (auto i =0; i < MAX_PARTICLES; i++)
+	for (auto i = 0; i < MAX_PARTICLES; i++)
 	{
-		particles[i].age = particles[i].age + 0.02;
+		particles[i].age = particles[i].age + 0.02f;
 
 		if (systemType == Smoke || particles[i].type == 1)
-			particles[i].scale = particles[i].scale + 0.001; //increasing scale makes textures bigger over lifetime
+			particles[i].scale = particles[i].scale + 0.001f; //increasing scale makes textures bigger over lifetime
 
-		particles[i].direction = particles[i].direction + ((((((int)(0.5) * rand() % 11) + 1)) * rand() % 11) + 1);
+		particles[i].direction = particles[i].direction + ((int(0.5) * rand() % 11 + 1) * rand() % 11 + 1);
 
 		particles[i].position[X] = particles[i].position[X] + particles[i].movement[X] + particles[i].pull[X];
 		particles[i].position[Y] = particles[i].position[Y] + particles[i].movement[Y] + particles[i].pull[Y];
@@ -253,17 +253,17 @@ float System::getB(int i)
 	return particles[i].color[Z];
 }
 
-float System::getScale(int i)
+float System::getScale(int i) const
 {
 	return particles[i].scale;
 }
 
-float System::getDirection(int i)
+float System::getDirection(int i) const
 {
 	return particles[i].direction;
 }
 
-float System::getAlpha(int i)
+float System::getAlpha(int i) const
 {
 	return (1 - particles[i].age / particles[i].lifespan);
 }

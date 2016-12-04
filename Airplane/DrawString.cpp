@@ -1,7 +1,7 @@
 #include "DrawString.h"
 #include <gl/freeglut.h>
 
-void DrawString::draw(string str, int w, int h, int x, int y)
+void DrawString::draw(std::string str, int w, int h, int x, int y)
 {
 	glDisable(GL_LIGHTING);
 	glMatrixMode(GL_PROJECTION);

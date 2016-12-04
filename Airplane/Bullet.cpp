@@ -31,10 +31,10 @@ void Bullet::moveForward()
 
 void Bullet::drawBullet()
 {
-	if (counter < 50)
+	if (counter < 55)
 	{
 		glTranslatef(cood.x, cood.z, cood.y);
-		glutSolidSphere(0.05f, 32, 16);
+		glutSolidSphere(0.05f, 32, 32);
 		counter++;
 	}
 	else

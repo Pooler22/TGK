@@ -11,18 +11,18 @@ bool upKey = false;
 bool downKey = false;
 bool leftKey = false;
 bool rightKey = false;
-
-float zoom;
 bool isDay = true;
 
+float zoom;
 float sealevel;
+
+GLfloat texture[10];
 
 AirPlane ap;
 Menu menu;
 Mountain mountain;
 System particleSystem;
 
-GLfloat texture[10];
 
 void DrawParticles(void)
 {
@@ -102,8 +102,10 @@ void FreeTexture(GLuint texture)
 	glDeleteTextures(1, &texture);
 }
 
+
 void init(void)
 {
+	sealevel = -0.2;
 	GLfloat amb[] = {0.2f,0.2f,0.2f};
 	GLfloat diff[] = {1.0f,1.0f,1.0f};
 	GLfloat spec[] = {1.0f,1.0f,1.0f};
@@ -119,7 +121,7 @@ void init(void)
 
 	glEnable(GL_DEPTH_TEST);
 
-	sealevel = -0.2;
+
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
 
@@ -284,7 +286,7 @@ void reshape(int w, int h)
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(90.0, float(w) / h, 0.01, 10.0);
+	gluPerspective(60.0, float(w) / h, 0.01, 10.0);
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -363,10 +365,10 @@ void keyboard(unsigned char key, int x, int y)
 	case 'd':
 		isDay = !isDay;
 		break;
-	case '0':
-		particleSystem.setSystemType(4);
-		particleSystem.createParticles();
-		break;
+		/*case '0':
+			particleSystem.setSystemType(4);
+			particleSystem.createParticles();
+			break;*/
 	case 27:
 		exit(0);
 	default: break;

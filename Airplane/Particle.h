@@ -39,19 +39,19 @@ public:
 	void createParticle(Particle* p) const; //creates and initalizes a single particle
 	void createParticles(); //calls createParticle() to initalize all particles in system
 	void updateParticles(); //updates particles according to forces being used
-	void turnToSmoke(Particle* p); //called only durring fire with smoke system to turn dead fire into smoke
+	static void turnToSmoke(Particle* p); //called only durring fire with smoke system to turn dead fire into smoke
 
 	void setSystemType(int systemType); //sets the particle system type
-	int getNumOfParticles(); // returns the number of particles in the system (legacy)
+	static int getNumOfParticles(); // returns the number of particles in the system (legacy)
 	float getXPos(int i); //returns x position of particle i
 	float getYPos(int i); //returns y position of particle i
 	float getZPos(int i); //returns z position of particle i
 	float getR(int i); //returns red component of particle i
 	float getG(int i); //returns green component of particle i
 	float getB(int i); //returns blue component of particle i
-	float getScale(int i); //returns scale of particle
-	float getDirection(int i); //returns direction of particle for texture rotation
-	float getAlpha(int i); //returns how faded (according to age) the particle should be
+	float getScale(int i) const; //returns scale of particle
+	float getDirection(int i) const; //returns direction of particle for texture rotation
+	float getAlpha(int i) const; //returns how faded (according to age) the particle should be
 
 	void modifySystemPull(float x, float y, float z); //used to modify x,y,z pull magnitudes
 };
