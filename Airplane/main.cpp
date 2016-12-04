@@ -2,165 +2,104 @@
 #include <glm/glm.hpp>
 #include "AirPlane.h"
 #include "DrawString.h"
-
-#define ADDR(i,j,k) (3*((j)*res + (i)) + (k))
-#define DEGREE 60
+#include "Menu.h"
+#include "Mountain.h"
+#include "Particle.h"
+#include <ctime>
 
 bool upKey = false;
 bool downKey = false;
 bool leftKey = false;
 bool rightKey = false;
-bool showHelp = true;
 
+float zoom;
 bool isDay = true;
-int res = 513;
+
 float sealevel;
 
-GLfloat* verts = nullptr;
-GLfloat* norms = nullptr;
-GLuint* faces = nullptr;
-
 AirPlane ap;
-DrawString ds;
+Menu menu;
+Mountain mountain;
+System particleSystem;
 
-float randomize(float x, float y)
+GLfloat texture[10];
+
+void DrawParticles(void)
 {
-	static auto a = 1688135690, b = 11176901;
-	srand(((int(x) * a) % b) - ((int(y) * b) % a));
-	return 2.0f * (float(rand()) / float(RAND_MAX)) - 1.0f;
-}
-
-void mountain(int i, int j, int s)
-{
-	if (s > 1)
+	int i;
+	for (i = 1; i < particleSystem.getNumOfParticles(); i++)
 	{
-		auto x0 = glm::vec3(verts[ADDR(i,j,0)], verts[ADDR(i,j,1)], verts[ADDR(i,j,2)]);
-		auto x1 = glm::vec3(verts[ADDR(i+s,j,0)], verts[ADDR(i+s,j,1)], verts[ADDR(i+s,j,2)]);
-		auto x2 = glm::vec3(verts[ADDR(i,j+s,0)], verts[ADDR(i,j+s,1)], verts[ADDR(i,j+s,2)]);
-		auto x3 = glm::vec3(verts[ADDR(i+s,j+s,0)], verts[ADDR(i+s,j+s,1)], verts[ADDR(i+s,j+s,2)]);
+		glPushMatrix();
+		glColor4f(particleSystem.getR(i), particleSystem.getG(i), particleSystem.getB(i), particleSystem.getAlpha(i));
+		// move the current particle to its new position
+		glTranslatef(particleSystem.getXPos(i), particleSystem.getYPos(i), particleSystem.getZPos(i) + zoom);
+		// rotate the particle (this is proof of concept for when proper smoke texture is added)
+		glRotatef(particleSystem.getDirection(i) - 90, 0, 0, 1);
+		// scale the wurrent particle (only used for smoke)
+		glScalef(particleSystem.getScale(i), particleSystem.getScale(i), particleSystem.getScale(i));
 
-		auto x01 = 0.5f * (x0 + x1);
-		auto x02 = 0.5f * (x0 + x2);
-		auto x13 = 0.5f * (x1 + x3);
-		auto x23 = 0.5f * (x2 + x3);
-		auto x0123 = 0.25f * (x0 + x1 + x2 + x3);
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
 
-		x01.z += 0.5f * (float(s) / res) * randomize(x01.x, x01.y);
-		x02.z += 0.5f * (float(s) / res) * randomize(x02.x, x02.y);
-		x13.z += 0.5f * (float(s) / res) * randomize(x13.x, x13.y);
-		x23.z += 0.5f * (float(s) / res) * randomize(x23.x, x23.y);
-		x0123.z += 0.5f * (float(s) / res) * randomize(x0123.x, x0123.y);
+		glBlendFunc(GL_DST_COLOR, GL_ZERO);
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
 
-		verts[ADDR(i+s/2,j,0)] = x01.x;
-		verts[ADDR(i+s/2,j,1)] = x01.y;
-		verts[ADDR(i+s/2,j,2)] = x01.z;
+		glBegin(GL_QUADS);
+		glTexCoord2d(0, 0);
+		glVertex3f(-1, -1, 0);
+		glTexCoord2d(1, 0);
+		glVertex3f(1, -1, 0);
+		glTexCoord2d(1, 1);
+		glVertex3f(1, 1, 0);
+		glTexCoord2d(0, 1);
+		glVertex3f(-1, 1, 0);
+		glEnd();
 
-		verts[ADDR(i,j+s/2,0)] = x02.x;
-		verts[ADDR(i,j+s/2,1)] = x02.y;
-		verts[ADDR(i,j+s/2,2)] = x02.z;
+		glBlendFunc(GL_ONE, GL_ONE);
+		glBindTexture(GL_TEXTURE_2D, texture[1]);
 
-		verts[ADDR(i+s,j+s/2,0)] = x13.x;
-		verts[ADDR(i+s,j+s/2,1)] = x13.y;
-		verts[ADDR(i+s,j+s/2,2)] = x13.z;
+		glBegin(GL_QUADS);
+		glTexCoord2d(0, 0);
+		glVertex3f(-1, -1, 0);
+		glTexCoord2d(1, 0);
+		glVertex3f(1, -1, 0);
+		glTexCoord2d(1, 1);
+		glVertex3f(1, 1, 0);
+		glTexCoord2d(0, 1);
+		glVertex3f(-1, 1, 0);
+		glEnd();
 
-		verts[ADDR(i+s/2,j+s,0)] = x23.x;
-		verts[ADDR(i+s/2,j+s,1)] = x23.y;
-		verts[ADDR(i+s/2,j+s,2)] = x23.z;
+		glEnable(GL_DEPTH_TEST);
 
-		verts[ADDR(i+s/2,j+s/2,0)] = x0123.x;
-		verts[ADDR(i+s/2,j+s/2,1)] = x0123.y;
-		verts[ADDR(i+s/2,j+s/2,2)] = x0123.z;
-
-		mountain(i, j, s / 2);
-		mountain(i + s / 2, j, s / 2);
-		mountain(i, j + s / 2, s / 2);
-		mountain(i + s / 2, j + s / 2, s / 2);
-	}
-	else
-	{
-		float dx, dy, dz;
-
-		if (i == 0)
-		{
-			dx = verts[ADDR(i+1,j,2)] - verts[ADDR(i,j,2)];
-		}
-		else if (i == res - 1)
-		{
-			dx = verts[ADDR(i,j,2)] - verts[ADDR(i-1,j,2)];
-		}
-		else
-		{
-			dx = (verts[ADDR(i+1,j,2)] - verts[ADDR(i-1,j,2)]) / 2.0f;
-		}
-
-		if (j == 0)
-		{
-			dy = verts[ADDR(i,j+1,2)] - verts[ADDR(i,j,2)];
-		}
-		else if (j == res - 1)
-		{
-			dy = verts[ADDR(i,j,2)] - verts[ADDR(i,j-1,2)];
-		}
-		else
-		{
-			dy = (verts[ADDR(i,j+1,2)] - verts[ADDR(i,j-1,2)]) / 2.0f;
-		}
-
-		dx *= res;
-		dy *= res;
-		dz = 1.0f / sqrt(dx * dx + dy * dy + 1.0f);
-		dx *= dz;
-		dy *= dz;
-
-		norms[ADDR(i,j,0)] = dx;
-		norms[ADDR(i,j,1)] = dy;
-		norms[ADDR(i,j,2)] = dz;
+		glPopMatrix();
 	}
 }
 
-void makemountain()
+GLuint LoadTextureRAW(const char* filename, int width, int height)
 {
-	int i, j;
+	GLuint texture;
+	unsigned char* data;
+	FILE* file;
+	fopen_s(&file, filename, "rb");
+	if (file == nullptr) return 0;
+	data = static_cast<unsigned char *>(malloc(width * height * 3));
+	fread(data, width * height * 3, 1, file);
+	fclose(file);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+	free(data);
+	return texture;
+}
 
-	if (verts) free(verts);
-	if (norms) free(norms);
-	if (faces) free(faces);
-
-	verts = static_cast<GLfloat *>(malloc(res * res * 3 * sizeof(GLfloat)));
-	norms = static_cast<GLfloat *>(malloc(res * res * 3 * sizeof(GLfloat)));
-	faces = static_cast<GLuint *>(malloc((res - 1) * (res - 1) * 6 * sizeof(GLuint)));
-
-	verts[ADDR(0,0,0)] = -5.0;
-	verts[ADDR(0,0,1)] = -5.0;
-	verts[ADDR(0,0,2)] = 0.0;
-
-	verts[ADDR(res-1,0,0)] = 5.0;
-	verts[ADDR(res-1,0,1)] = -5.0;
-	verts[ADDR(res-1,0,2)] = 0.0;
-
-	verts[ADDR(0,res-1,0)] = -5.0;
-	verts[ADDR(0,res-1,1)] = 5.0;
-	verts[ADDR(0,res-1,2)] = 0.0;
-
-	verts[ADDR(res-1,res-1,0)] = 5.0;
-	verts[ADDR(res-1,res-1,1)] = 5.0;
-	verts[ADDR(res-1,res-1,2)] = 0.0;
-
-	mountain(0, 0, res - 1);
-
-	auto f = faces;
-	for (j = 0; j < res - 1; j++)
-	{
-		for (i = 0; i < res - 1; i++)
-		{
-			*f++ = j * res + i;
-			*f++ = j * res + i + 1;
-			*f++ = (j + 1) * res + i + 1;
-			*f++ = j * res + i;
-			*f++ = (j + 1) * res + i + 1;
-			*f++ = (j + 1) * res + i;
-		}
-	}
+void FreeTexture(GLuint texture)
+{
+	glDeleteTextures(1, &texture);
 }
 
 void init(void)
@@ -181,58 +120,98 @@ void init(void)
 	glEnable(GL_DEPTH_TEST);
 
 	sealevel = -0.2;
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
 
-	makemountain();
-}
+	zoom = -80.0f;
+	particleSystem.setSystemType(1);
+	particleSystem.createParticles();
 
-void drawStrings()
-{
-	glColor3d(0.2, 0.2, 0.2);
-	ds.draw("    h - show/hide help", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 5);
-	if (showHelp)
-	{
-		ds.draw("   UP - pitch down", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 10);
-		ds.draw(" Down - pitch up", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 14);
-		ds.draw(" Left - roll left", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 18);
-		ds.draw("Right - roll right", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 22);
-		ds.draw("  +   - sea level up", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 26);
-		ds.draw("  -   - sea level down", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 30);
-		ds.draw("  f   - resolution up", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 34);
-		ds.draw("  c   - resolution down", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 38);
-		ds.draw("Space - shoot", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 42);
-	}
+	texture[0] = LoadTextureRAW("particle_mask.raw", 256, 256); //load alpha for texture
+	texture[1] = LoadTextureRAW("particle.raw", 256, 256); //load texture
+
+	menu = Menu();
+	mountain = Mountain();
+	mountain.makemountain();
 }
 
 void keyboardFlag()
 {
+	const auto deegre = 90;
 	if (leftKey)
 	{
-		ap.updateRoll(DEGREE);
+		ap.updateRoll(deegre);
 	}
 	if (rightKey)
 	{
-		ap.updateRoll(-DEGREE);
+		ap.updateRoll(-deegre);
 	}
 	if (upKey)
 	{
-		ap.updatePitch(-DEGREE);
+		ap.updatePitch(-deegre);
 	}
 	if (downKey)
 	{
-		ap.updatePitch(DEGREE);
+		ap.updatePitch(deegre);
 	}
 }
 
 void display(void)
 {
+	glClearDepth(1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glEnable(GL_FOG); // włączenie efektu mgły
+	glHint(GL_FOG_HINT, GL_DONT_CARE); // wskazówki jakości generacji mgły
 	if (isDay)
 	{
-		glClearColor(0.5, 0.5, 1.0, 0.0);
+		glFogfv(GL_FOG_COLOR, new float[4]{1,1,1,1}); // kolor mgły
 	}
 	else
 	{
-		glClearColor(0.1, 0.1, 0.2, 0.1);
+		glFogfv(GL_FOG_COLOR, new float[4]{0,0,0,1}); // kolor mgły
 	}
+
+	glFogf(GL_FOG_DENSITY, 0.2); // gęstość mgły
+	glFogf(GL_FOG_MODE, GL_EXP2); // rodzaj mgły
+	glFogf(GL_FOG_START, 1.0); // początek i koniec oddziaływania mgły liniowej
+	glFogf(GL_FOG_END, 2.0);
+
+	if (isDay)
+	{
+		GLfloat amb[] = {0.2f,0.2f,0.2f};
+		GLfloat diff[] = {1.0f,1.0f,1.0f};
+		GLfloat spec[] = {1.0f,1.0f,1.0f};
+
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+
+		glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
+		glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
+
+		glClearColor(0.9, 0.9, 0.9, 0.0);
+
+		glEnable(GL_DEPTH_TEST);
+	}
+	else
+	{
+		GLfloat amb[] = {0.2f,0.2f,0.1f};
+		GLfloat diff[] = {1.0f,1.0f,0.1f};
+		GLfloat spec[] = {1.0f,1.0f,0.1f};
+
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+
+		glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
+		glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
+
+		glClearColor(0.0, 0.0, 0.0, 0.1);
+
+		glEnable(GL_DEPTH_TEST);
+	}
+
 
 	GLfloat tanamb[] = {0.2,0.15,0.1,1.0};
 	GLfloat tandiff[] = {0.4,0.3,0.2,1.0};
@@ -242,21 +221,22 @@ void display(void)
 	GLfloat seadiff[] = {0.0,0.0,0.8,1.0};
 	GLfloat seaspec[] = {0.5,0.5,1.0,1.0}; // Single polygon, will only have highlight if light hits a vertex just right
 
-	GLfloat lpos[] = {0.0,0.0,10.0,0.0}; // sun, high noon
-
+	GLfloat lpos[] = {0.0,0.0,10.0,0.0}; // sun
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glColor3f(1.0, 1.0, 1.0);
 	glLoadIdentity();
 
 	keyboardFlag();
-	ap.moveForward();
+	ap.moveForward(sealevel);
+
 	ap.updateCamera();
-	//	ap.drawPlain();
-	drawStrings();
+	menu.drawStrings();
 
 	// send the light position down as if it was a vertex in world coordinates
 	glLightfv(GL_LIGHT0, GL_POSITION, lpos);
+
+	glShadeModel(GL_FLAT);
 
 	// load terrain material
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, tanamb);
@@ -267,9 +247,9 @@ void display(void)
 	// Send terrain mesh through pipeline
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
-	glVertexPointer(3,GL_FLOAT, 0, verts);
-	glNormalPointer(GL_FLOAT, 0, norms);
-	glDrawElements(GL_TRIANGLES, 6 * (res - 1) * (res - 1), GL_UNSIGNED_INT, faces);
+	glVertexPointer(3,GL_FLOAT, 0, mountain.verts);
+	glNormalPointer(GL_FLOAT, 0, mountain.norms);
+	glDrawElements(GL_TRIANGLES, 6 * (mountain.res - 1) * (mountain.res - 1), GL_UNSIGNED_INT, mountain.faces);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 
@@ -288,8 +268,12 @@ void display(void)
 	glVertex3f(-5, 5, sealevel);
 	glEnd();
 
+	ap.drawPlain();
 	ap.drawBullet();
 
+
+	particleSystem.updateParticles();
+	DrawParticles();
 	glutSwapBuffers();
 	glFlush();
 	glutPostRedisplay();
@@ -348,6 +332,13 @@ void keyboard(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
+	case 'z':
+		ap.changeSpeed(1);
+		break;
+	case 'x':
+		ap.changeSpeed(-1);
+		break;
+
 	case '-':
 		sealevel -= 0.01;
 		break;
@@ -356,21 +347,25 @@ void keyboard(unsigned char key, int x, int y)
 		sealevel += 0.01;
 		break;
 	case 'f':
-		res = (res - 1) * 2 + 1;
-		makemountain();
+		mountain.res = (mountain.res - 1) * 2 + 1;
+		mountain.makemountain();
 		break;
 	case 'c':
-		res = (res - 1) / 2 + 1;
-		makemountain();
+		mountain.res = (mountain.res - 1) / 2 + 1;
+		mountain.makemountain();
 		break;
 	case 'h':
-		showHelp = !showHelp;
+		menu.changeVisibilityMenu();
 		break;
 	case ' ':
 		ap.shootBullet();
 		break;
 	case 'd':
 		isDay = !isDay;
+		break;
+	case '0':
+		particleSystem.setSystemType(4);
+		particleSystem.createParticles();
 		break;
 	case 27:
 		exit(0);
@@ -380,6 +375,7 @@ void keyboard(unsigned char key, int x, int y)
 
 int main(int argc, char** argv)
 {
+	srand(static_cast<unsigned int>(time(nullptr)));
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(1280, 720);

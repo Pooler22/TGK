@@ -9,6 +9,7 @@
 class AirPlane
 {
 public:
+	bool flaing;
 	float moveSpeed;
 	Camera cam;
 	Bullet bul[MAX_BULLET];
@@ -17,10 +18,11 @@ public:
 	void updateCamera() const;
 	void updateRoll(float deg);
 	void updatePitch(float deg);
-	void moveForward();
+	void moveForward(float sealevel);
+	void changeSpeed(int val);
 	void shootBullet();
 	void drawBullet();
-	void drawPlain();
+	void drawPlain() const;
 };
 
 #endif

@@ -1,57 +1,22 @@
 ﻿#include <GL/freeglut.h>
-#include <iostream>
+
 #include "Cube.cpp"
 #include "Spring.cpp"
 #include "Sphere.cpp"
+#include "Texturable.cpp"
 
 static GLfloat move = 0.0f;
-auto mode = false;
 
 Sphere* sphere = nullptr;
 Spring* spring = nullptr;
 Cube* cube = nullptr;
 
-GLuint LoadTexture(const char* filename)
-{
-	GLuint texture;
-	int width, height, size;
-	unsigned char* data;
-	FILE* file;
-
-	width = 256;
-	height = 256;
-	size = width * height * 3;
-
-	fopen_s(&file, filename, "rb");
-	if (file == nullptr) return 0;
-	data = static_cast<unsigned char *>(malloc(size));
-	fread(data, size, 1, file);
-	fclose(file);
-
-	for (auto i = 0; i < size; i += 3)
-	{
-		std::swap(data[i], data[i + 2]);
-	}
-
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
-	free(data);
-
-	return texture;
-}
 
 void MyInit()
 {
-	sphere = new Sphere(0, -18, -25, 6, LoadTexture("wood.bmp"));
-	spring = new Spring(0, -10, -25, LoadTexture("steel.bmp"));
-	cube = new Cube(0, 16, -25, 5, LoadTexture("wood.bmp"));
+	sphere = new Sphere(0, -18, -25, 6, Texturable::LoadTexture("wood.bmp"));
+	spring = new Spring(0, -10, -25, Texturable::LoadTexture("steel.bmp"));
+	cube = new Cube(0, 16, -25, 5, Texturable::LoadTexture("wood.bmp"));
 }
 
 void Display()
@@ -69,15 +34,9 @@ void Display()
 	glFlush();
 }
 
-void Keyboard(unsigned char key, int x, int y) {
-
-	switch (key) {
-	case 'a':
-		mode = !mode;
-	default: break;
-	case 27:
-		exit(0);
-	}
+void Keyboard(unsigned char key, int x, int y)
+{
+	move = 10;
 }
 
 void Reshape(int width, int height)
@@ -93,10 +52,10 @@ void Reshape(int width, int height)
 void Update(int value)
 {
 	static auto passed = false;
-	static auto inclination = 1.2f;
-	static auto precison = 0.000001;
-	static auto inclinationStep = 0.102f;
-	static auto step = 0.1f;
+	static GLfloat inclination = 1.2f;
+	const static GLfloat precison = 0.0001f;
+	const static GLfloat inclinationStep = 0.0102f;
+	const static GLfloat step = 0.1f;
 
 	if (move > 0)
 	{
@@ -107,9 +66,13 @@ void Update(int value)
 		inclination += step;
 	}
 
-	if (move > precison || move < (-precison) || move == 0)
+	if (abs(move) > precison || move == 0)
 	{
 		move += inclination;
+	}
+	else
+	{
+		move = 0;
 	}
 
 	if (move < 0 && passed == false)

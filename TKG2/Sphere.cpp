@@ -18,11 +18,9 @@ public:
 		Texturable::Draw();
 
 		glPushMatrix();
-		
 		glTranslatef(x, y + ruch, z);
 		glRotatef(90, 1, 0, 0);
 		gluSphere(sphereObject, r, 10, 10);
-
 		glPopMatrix();
 	}
 

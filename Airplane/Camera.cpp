@@ -1,12 +1,13 @@
 #include "Camera.h"
 #include <glm/glm.hpp>
+#include <glm/gtx/vector_angle.hpp>
 
 Camera::Camera()
 {
 	position = glm::vec3(0, 0, 0);
 	rotation = glm::vec4(0.0, 0.0, 0.0, 1.0);
 	lookAt = glm::vec3(1, 0, 0);
-	up = glm::vec3(0, 1, 0);
+	up = glm::vec3(0, 0,1);
 }
 
 glm::vec4 op1(glm::vec4& rq1, glm::vec4& rq2)
@@ -26,7 +27,7 @@ glm::vec3 op2(glm::vec4 a, glm::vec3& vec)
 
 void Camera::roll(float r)
 {
-	rotation = normalize(op1(normalize(glm::vec4(op2(rotation, *new glm::vec3(1.0, 0.0, 0.0)), r)), rotation));
+	rotation = normalize(op1(normalize(glm::vec4(op2(rotation, glm::vec3(1.0, 0.0, 0.0)), r)), rotation));
 }
 
 void Camera::pitch(float r)
