@@ -19,7 +19,8 @@ public:
 	void updateRoll(float deg);
 	void updatePitch(float deg);
 	void moveForward(float sealevel);
-	void changeSpeed(int val);
+	void increaseSpeed();
+	void decreaseSpeed();
 	void shootBullet();
 	void drawBullet();
 	void drawPlain() const;

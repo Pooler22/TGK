@@ -123,12 +123,12 @@ void init(void)
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
 
-	zoom = -80.0f;
-	particleSystem.setSystemType(1);
-	particleSystem.createParticles();
+	//zoom = -80.0f;
+	//particleSystem.setSystemType(1);
+	//particleSystem.createParticles();
 
-	texture[0] = LoadTextureRAW("particle_mask.raw", 256, 256); //load alpha for texture
-	texture[1] = LoadTextureRAW("particle.raw", 256, 256); //load texture
+	//texture[0] = LoadTextureRAW("particle_mask.raw", 256, 256); //load alpha for texture
+	//texture[1] = LoadTextureRAW("particle.raw", 256, 256); //load texture
 
 	menu = Menu();
 	mountain = Mountain();
@@ -272,8 +272,8 @@ void display(void)
 	ap.drawBullet();
 
 
-	particleSystem.updateParticles();
-	DrawParticles();
+	/*particleSystem.updateParticles();
+	DrawParticles();*/
 	glutSwapBuffers();
 	glFlush();
 	glutPostRedisplay();
@@ -333,10 +333,10 @@ void keyboard(unsigned char key, int x, int y)
 	switch (key)
 	{
 	case 'z':
-		ap.changeSpeed(1);
+		ap.increaseSpeed();
 		break;
 	case 'x':
-		ap.changeSpeed(-1);
+		ap.decreaseSpeed();
 		break;
 
 	case '-':

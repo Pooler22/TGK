@@ -8,9 +8,14 @@ AirPlane::AirPlane()
 	flaing = true;
 }
 
-void AirPlane::changeSpeed(int val)
+void AirPlane::increaseSpeed()
 {
-	moveSpeed += val*0.001;
+	moveSpeed += 0.001;
+}
+
+void AirPlane::decreaseSpeed()
+{
+	moveSpeed -= 0.001;
 }
 
 void AirPlane::updateCamera() const
