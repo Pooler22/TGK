@@ -5,6 +5,7 @@
 AirPlane::AirPlane()
 {
 	moveSpeed = 0.005f;
+	cam.updateVectors();
 }
 
 void AirPlane::increaseSpeed()
@@ -45,10 +46,6 @@ void AirPlane::updatePitch(float deg)
 void AirPlane::moveForward(float sealevel)
 {
 	cam.position += cam.lookAt * moveSpeed;
-	if (abs(sealevel - cam.position.z) > 0.01f)
-	{
-		cam.position.z -= 0.001f;
-	}
 }
 
 void AirPlane::shootBullet()

@@ -36,9 +36,6 @@
     <ClCompile Include="Mountain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Particle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -60,14 +57,5 @@
     <ClInclude Include="Mountain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Particle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <_EmbedManagedResourceFile Include="f-16.mtl" />
-    <_EmbedManagedResourceFile Include="f-16.obj" />
-    <_EmbedManagedResourceFile Include="particle.raw" />
-    <_EmbedManagedResourceFile Include="particle_mask.raw" />
   </ItemGroup>
 </Project>

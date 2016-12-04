@@ -3,8 +3,6 @@
 
 #include <gl/freeglut.h>
 
-#define ADDR(i,j,k) (3*((j)*res + (i)) + (k))
-
 class Mountain
 {
 public:

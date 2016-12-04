@@ -2,6 +2,8 @@
 #include <glm/detail/type_vec3.hpp>
 #include <cmath>
 
+#define ADDR(i,j,k) (3*((j)*res + (i)) + (k))
+
 float Mountain::randomize(float x, float y)
 {
 	static auto a = 1688135690, b = 11176901;

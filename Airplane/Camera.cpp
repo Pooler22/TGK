@@ -1,12 +1,13 @@
 #include "Camera.h"
 #include <glm/gtx/vector_angle.hpp>
+#include <iostream>
 
 Camera::Camera()
 {
-	rotation = glm::vec4(0.0, 0.0, 0.0, 1.0);
+	rotation = glm::vec4(1, 0.0, 0.0, 1.0);
 	position = glm::vec3(0, 0, 0);
-	lookAt = glm::vec3(1, 0, 0);
-	up = glm::vec3(0, 0, 1);
+	lookAt = glm::vec3(0, 1, 0);
+	up = glm::vec3(1, 0, 0);
 }
 
 glm::vec4 op1(glm::vec4& rq1, glm::vec4& rq2)
@@ -21,21 +22,22 @@ glm::vec4 op1(glm::vec4& rq1, glm::vec4& rq2)
 
 glm::vec3 op2(glm::vec4 a, glm::vec3& vec)
 {
-	return glm::vec3(op1(op1(a, glm::vec4(normalize(vec), 0.0)), *new glm::vec4(glm::vec3(-a), a.w)));
+	return glm::vec3(op1(op1(a, glm::vec4((vec), 0.0)), *new glm::vec4(glm::vec3(-a), a.w)));
 }
 
 void Camera::roll(float r)
 {
-	rotation = normalize(op1(normalize(glm::vec4(op2(rotation, glm::vec3(1.0, 0.0, 0.0)), r)), rotation));
+	rotation = normalize(op1((glm::vec4(op2(rotation, glm::vec3(1.0, 0.0, 0.0)), r)), rotation));
 }
 
 void Camera::pitch(float r)
 {
-	rotation = normalize(op1(normalize(glm::vec4(op2(rotation, glm::vec3(0.0, 0.0, 1.0)), r)), rotation));
+	rotation = normalize(op1((glm::vec4(op2(rotation, glm::vec3(0.0, 0.0, 1.0)), r)), rotation));
 }
 
 void Camera::updateVectors()
 {
 	lookAt = op2(rotation, *new glm::vec3(1.0, 0.0, 0.0));
 	up = op2(rotation, *new glm::vec3(0.0, 1.0, 0.0));
+	std::cout << rotation.x << "\t" << rotation.y << "\t" << rotation.z << "\n";
 }

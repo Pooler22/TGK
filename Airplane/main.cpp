@@ -4,7 +4,6 @@
 #include "DrawString.h"
 #include "Menu.h"
 #include "Mountain.h"
-#include "Particle.h"
 #include <ctime>
 
 bool upKey = false;
@@ -21,87 +20,6 @@ GLfloat texture[10];
 AirPlane ap;
 Menu menu;
 Mountain mountain;
-System particleSystem;
-
-
-void DrawParticles(void)
-{
-	int i;
-	for (i = 1; i < particleSystem.getNumOfParticles(); i++)
-	{
-		glPushMatrix();
-		glColor4f(particleSystem.getR(i), particleSystem.getG(i), particleSystem.getB(i), particleSystem.getAlpha(i));
-		// move the current particle to its new position
-		glTranslatef(particleSystem.getXPos(i), particleSystem.getYPos(i), particleSystem.getZPos(i) + zoom);
-		// rotate the particle (this is proof of concept for when proper smoke texture is added)
-		glRotatef(particleSystem.getDirection(i) - 90, 0, 0, 1);
-		// scale the wurrent particle (only used for smoke)
-		glScalef(particleSystem.getScale(i), particleSystem.getScale(i), particleSystem.getScale(i));
-
-		glDisable(GL_DEPTH_TEST);
-		glEnable(GL_BLEND);
-
-		glBlendFunc(GL_DST_COLOR, GL_ZERO);
-		glBindTexture(GL_TEXTURE_2D, texture[0]);
-
-		glBegin(GL_QUADS);
-		glTexCoord2d(0, 0);
-		glVertex3f(-1, -1, 0);
-		glTexCoord2d(1, 0);
-		glVertex3f(1, -1, 0);
-		glTexCoord2d(1, 1);
-		glVertex3f(1, 1, 0);
-		glTexCoord2d(0, 1);
-		glVertex3f(-1, 1, 0);
-		glEnd();
-
-		glBlendFunc(GL_ONE, GL_ONE);
-		glBindTexture(GL_TEXTURE_2D, texture[1]);
-
-		glBegin(GL_QUADS);
-		glTexCoord2d(0, 0);
-		glVertex3f(-1, -1, 0);
-		glTexCoord2d(1, 0);
-		glVertex3f(1, -1, 0);
-		glTexCoord2d(1, 1);
-		glVertex3f(1, 1, 0);
-		glTexCoord2d(0, 1);
-		glVertex3f(-1, 1, 0);
-		glEnd();
-
-		glEnable(GL_DEPTH_TEST);
-
-		glPopMatrix();
-	}
-}
-
-GLuint LoadTextureRAW(const char* filename, int width, int height)
-{
-	GLuint texture;
-	unsigned char* data;
-	FILE* file;
-	fopen_s(&file, filename, "rb");
-	if (file == nullptr) return 0;
-	data = static_cast<unsigned char *>(malloc(width * height * 3));
-	fread(data, width * height * 3, 1, file);
-	fclose(file);
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
-	free(data);
-	return texture;
-}
-
-void FreeTexture(GLuint texture)
-{
-	glDeleteTextures(1, &texture);
-}
-
 
 void init(void)
 {
@@ -121,16 +39,8 @@ void init(void)
 
 	glEnable(GL_DEPTH_TEST);
 
-
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
-
-	//zoom = -80.0f;
-	//particleSystem.setSystemType(1);
-	//particleSystem.createParticles();
-
-	//texture[0] = LoadTextureRAW("particle_mask.raw", 256, 256); //load alpha for texture
-	//texture[1] = LoadTextureRAW("particle.raw", 256, 256); //load texture
 
 	menu = Menu();
 	mountain = Mountain();
@@ -142,11 +52,11 @@ void keyboardFlag()
 	const auto deegre = 90;
 	if (leftKey)
 	{
-		ap.updateRoll(deegre);
+		ap.updateRoll(-deegre);
 	}
 	if (rightKey)
 	{
-		ap.updateRoll(-deegre);
+		ap.updateRoll(deegre);
 	}
 	if (upKey)
 	{
@@ -348,14 +258,6 @@ void keyboard(unsigned char key, int x, int y)
 	case '=':
 		sealevel += 0.01;
 		break;
-	case 'f':
-		mountain.res = (mountain.res - 1) * 2 + 1;
-		mountain.makemountain();
-		break;
-	case 'c':
-		mountain.res = (mountain.res - 1) / 2 + 1;
-		mountain.makemountain();
-		break;
 	case 'h':
 		menu.changeVisibilityMenu();
 		break;
@@ -365,10 +267,6 @@ void keyboard(unsigned char key, int x, int y)
 	case 'd':
 		isDay = !isDay;
 		break;
-		/*case '0':
-			particleSystem.setSystemType(4);
-			particleSystem.createParticles();
-			break;*/
 	case 27:
 		exit(0);
 	default: break;
@@ -377,7 +275,6 @@ void keyboard(unsigned char key, int x, int y)
 
 int main(int argc, char** argv)
 {
-	srand(static_cast<unsigned int>(time(nullptr)));
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(1280, 720);
