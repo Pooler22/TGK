@@ -43,6 +43,9 @@
     <ClCompile Include="ObjLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AirPlane.h">
@@ -69,6 +72,9 @@
     <ClInclude Include="ObjLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="steel.bmp">
@@ -77,5 +83,9 @@
   </ItemGroup>
   <ItemGroup>
     <_EmbedManagedResourceFile Include="model.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="particle_mask.raw" />
+    <EmbeddedResource Include="particle.raw" />
   </ItemGroup>
 </Project>

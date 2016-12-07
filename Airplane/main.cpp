@@ -5,6 +5,7 @@
 #include "Menu.h"
 #include "Mountain.h"
 #include <ctime>
+#include "System.h"
 
 bool upKey = false;
 bool downKey = false;
@@ -12,7 +13,6 @@ bool leftKey = false;
 bool rightKey = false;
 bool isDay = true;
 
-float zoom;
 float sealevel;
 
 GLfloat texture[10];
@@ -20,6 +20,90 @@ GLfloat texture[10];
 AirPlane ap = AirPlane(Texturable::LoadTexture("steel.bmp"));
 Menu menu;
 Mountain mountain;
+
+System particleSystem;
+
+GLfloat texture_t[10];
+
+void DrawParticles(void)
+{
+	for (auto i = 1; i < particleSystem.getNumOfParticles(); i++)
+	{
+		glPushMatrix();
+		// set color and fade value (alpha) of current particle
+		glColor4f(particleSystem.getR(i), particleSystem.getG(i), particleSystem.getB(i), particleSystem.getAlpha(i));
+		// move the current particle to its new position
+		glTranslatef(particleSystem.getXPos(i), particleSystem.getYPos(i), particleSystem.getZPos(i)); //+ zoom
+		// rotate the particle (this is proof of concept for when proper smoke texture_t is added)
+		glRotatef(particleSystem.getDirection(i) - 90, 0, 0, 1);
+		// scale the wurrent particle (only used for smoke)
+		glScalef(particleSystem.getScale(i), particleSystem.getScale(i), particleSystem.getScale(i));
+
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+
+		glBlendFunc(GL_DST_COLOR, GL_ZERO);
+		glBindTexture(GL_TEXTURE_2D, texture_t[0]);
+
+		glBegin(GL_QUADS);
+		glTexCoord2d(0, 0);
+		glVertex3f(-0.1, -0.1, 0);
+		glTexCoord2d(0.1, 0);
+		glVertex3f(0.1, -0.1, 0);
+		glTexCoord2d(0.1, 0.1);
+		glVertex3f(0.1, 0.1, 0);
+		glTexCoord2d(0, 0.1);
+		glVertex3f(-0.1, 0.1, 0);
+		glEnd();
+
+		glBlendFunc(GL_ONE, GL_ONE);
+		glBindTexture(GL_TEXTURE_2D, texture_t[1]);
+
+		glBegin(GL_QUADS);
+		glTexCoord2d(0, 0);
+		glVertex3f(-0.1, -0.1, 0);
+		glTexCoord2d(0.1, 0);
+		glVertex3f(0.1, -0.1, 0);
+		glTexCoord2d(0.1, 0.1);
+		glVertex3f(0.1, 0.1, 0);
+		glTexCoord2d(0, 0.1);
+		glVertex3f(-0.1, 0.1, 0);
+		glEnd();
+
+		glEnable(GL_DEPTH_TEST);
+
+		glPopMatrix();
+	}
+}
+
+
+GLuint LoadTextureRAW(const char* filename, int width, int height)
+{
+	GLuint texture_t;
+	unsigned char* data;
+	FILE* file;
+	fopen_s(&file, filename, "rb");
+	if (file == nullptr) return 0;
+	data = (unsigned char *)malloc(width * height * 3);
+	fread(data, width * height * 3, 1, file);
+	fclose(file);
+	glGenTextures(1, &texture_t);
+	glBindTexture(GL_TEXTURE_2D, texture_t);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+	free(data);
+	return texture_t;
+}
+
+void FreeTexture(GLuint texture_t)
+{
+	glDeleteTextures(1, &texture_t);
+}
+
 
 void init(void)
 {
@@ -42,10 +126,16 @@ void init(void)
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
 
-	
+
 	menu = Menu();
 	mountain = Mountain();
 	mountain.makemountain();
+
+	texture_t[0] = LoadTextureRAW("particle_mask.raw", 256, 256); //load alpha for texture_t
+	texture_t[1] = LoadTextureRAW("particle.raw", 256, 256); //load texture_t
+
+	particleSystem.setSystemType(4);
+	particleSystem.createParticles();
 }
 
 void keyboardFlag()
@@ -141,6 +231,26 @@ void display(void)
 	glLoadIdentity();
 
 	keyboardFlag();
+
+
+	///////////////
+
+	glPushMatrix();
+
+	glTranslatef(0, 0, -0.050);
+	glScalef(0.001, 0.001, 0.001);
+
+	particleSystem.updateParticles();
+	DrawParticles();
+
+	glScalef(1000, 1000, 1000);
+	glTranslatef(0, 0, 0.050);
+
+	glPopMatrix();
+
+	//////////////////
+
+
 	ap.drawPlain();
 	ap.moveForward(sealevel);
 
@@ -182,7 +292,7 @@ void display(void)
 	glVertex3f(-5, 5, sealevel);
 	glEnd();
 
-	
+
 	ap.drawBullet();
 
 

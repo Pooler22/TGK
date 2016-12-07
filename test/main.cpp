@@ -1,151 +1,189 @@
+#include <GL/freeglut.h>
+#include <stdio.h>
+#include <ctime>
+#include "System.h"
 
-#include <iostream>
-#include <stdlib.h>
+float zoom;
+System particleSystem;
 
-#include <gl/freeglut.h>
+// texture related globals
+GLfloat texture[10];
+GLuint LoadTextureRAW(const char* filename, int width, int height);
+void FreeTexture(GLuint texturez);
 
-#include "imageloader.h"
+void DrawParticles(void)
+{
+	int i;
+	for (i = 1; i < particleSystem.getNumOfParticles(); i++)
+	{
+		glPushMatrix();
+		// set color and fade value (alpha) of current particle
+		glColor4f(particleSystem.getR(i), particleSystem.getG(i), particleSystem.getB(i), particleSystem.getAlpha(i));
+		// move the current particle to its new position
+		glTranslatef(particleSystem.getXPos(i), particleSystem.getYPos(i), particleSystem.getZPos(i) + zoom);
+		// rotate the particle (this is proof of concept for when proper smoke texture is added)
+		glRotatef(particleSystem.getDirection(i) - 90, 0, 0, 1);
+		// scale the wurrent particle (only used for smoke)
+		glScalef(particleSystem.getScale(i), particleSystem.getScale(i), particleSystem.getScale(i));
 
-using namespace std;
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
 
-void handleKeypress(unsigned char key, int x, int y) {
-	switch (key) {
+		glBlendFunc(GL_DST_COLOR, GL_ZERO);
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+		glBegin(GL_QUADS);
+		glTexCoord2d(0, 0);
+		glVertex3f(-1, -1, 0);
+		glTexCoord2d(1, 0);
+		glVertex3f(1, -1, 0);
+		glTexCoord2d(1, 1);
+		glVertex3f(1, 1, 0);
+		glTexCoord2d(0, 1);
+		glVertex3f(-1, 1, 0);
+		glEnd();
+
+		glBlendFunc(GL_ONE, GL_ONE);
+		glBindTexture(GL_TEXTURE_2D, texture[1]);
+
+		glBegin(GL_QUADS);
+		glTexCoord2d(0, 0);
+		glVertex3f(-1, -1, 0);
+		glTexCoord2d(1, 0);
+		glVertex3f(1, -1, 0);
+		glTexCoord2d(1, 1);
+		glVertex3f(1, 1, 0);
+		glTexCoord2d(0, 1);
+		glVertex3f(-1, 1, 0);
+		glEnd();
+
+		glEnable(GL_DEPTH_TEST);
+
+		glPopMatrix();
+	}
+}
+
+void display(void)
+{
+	glClearDepth(1);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+	glTranslatef(0, 0, -10);
+
+	particleSystem.updateParticles();
+	DrawParticles();
+
+	glutSwapBuffers();
+}
+
+void init(void)
+{
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
+
+	zoom = -80.0f;
+	particleSystem.setSystemType(1);
+	particleSystem.createParticles();
+
+	texture[0] = LoadTextureRAW("particle_mask.raw", 256, 256); //load alpha for texture
+	texture[1] = LoadTextureRAW("particle.raw", 256, 256); //load texture
+}
+
+//Called when a key is pressed
+void handleKeypress(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case 49: //1 key: smoke
+		zoom = -80.0f;
+		particleSystem.setSystemType(1);
+		particleSystem.createParticles();
+		break;
+	case 50: //2 key: fountain high
+		zoom = -40.0f;
+		particleSystem.setSystemType(2);
+		particleSystem.createParticles();
+		break;
+	case 51: //3 key: fire
+		zoom = -40.0f;
+		particleSystem.setSystemType(3);
+		particleSystem.createParticles();
+		break;
+	case 52: //4 key: fire with smoke
+		zoom = -60.0f;
+		particleSystem.setSystemType(4);
+		particleSystem.createParticles();
+		break;
+	case 61: //+ key: change x pull for more wind to right
+		particleSystem.modifySystemPull(0.0005f, 0.0f, 0.0f);
+		break;
+	case 45: //- key: change x pull for wind wind to left
+		particleSystem.modifySystemPull(-0.0005f, 0.0f, 0.0f);
+		break;
+	case 91: //[ key: change y pull for more gravity
+		particleSystem.modifySystemPull(0.0f, 0.0005f, 0.0f);
+		break;
+	case 93: //] key; change y pull for less gravity
+		particleSystem.modifySystemPull(0.0f, -0.0005f, 0.0f);
+		break;
 	case 27: //Escape key
 		exit(0);
 	}
 }
 
-//Makes the image into a texture, and returns the id of the texture
-GLuint loadTexture(Image* image) {
-	GLuint textureId;
-	glGenTextures(1, &textureId); //Make room for our texture
-	glBindTexture(GL_TEXTURE_2D, textureId); //Tell OpenGL which texture to edit
-											 //Map the image to the texture
-	glTexImage2D(GL_TEXTURE_2D,                //Always GL_TEXTURE_2D
-		0,                            //0 for now
-		GL_RGB,                       //Format OpenGL uses for image
-		image->width, image->height,  //Width and height
-		0,                            //The border of the image
-		GL_RGB, //GL_RGB, because pixels are stored in RGB format
-		GL_UNSIGNED_BYTE, //GL_UNSIGNED_BYTE, because pixels are stored
-						  //as unsigned numbers
-		image->pixels);               //The actual pixel data
-	return textureId; //Returns the id of the texture
-}
-
-GLuint _textureId; //The id of the texture
-
-void initRendering() {
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_NORMALIZE);
-	glEnable(GL_COLOR_MATERIAL);
-
-	Image* image = loadBMP("vtr.bmp");
-	_textureId = loadTexture(image);
-	delete image;
-}
-
-void handleResize(int w, int h) {
-	glViewport(0, 0, w, h);
+void reshape(int w, int h)
+{
+	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0, (float)w / (float)h, 1.0, 200.0);
-}
-
-void drawScene() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	gluPerspective(60, (GLfloat)w / (GLfloat)h, 1.0, 100.0);
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	glTranslatef(0.0f, 1.0f, -6.0f);
-
-	GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
-
-	GLfloat directedLight[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-	GLfloat directedLightPos[] = { -10.0f, 15.0f, 20.0f, 0.0f };
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, directedLight);
-	glLightfv(GL_LIGHT0, GL_POSITION, directedLightPos);
-
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, _textureId);
-
-	//Bottom
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glColor3f(1.0f, 0.2f, 0.2f);
-	glBegin(GL_QUADS);
-
-	glNormal3f(0.0, 1.0f, 0.0f);
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(-2.5f, -2.5f, 2.5f);
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(2.5f, -2.5f, 2.5f);
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(2.5f, -2.5f, -2.5f);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(-2.5f, -2.5f, -2.5f);
-
-	glEnd();
-
-	//Back
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glBegin(GL_TRIANGLES);
-
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(-2.5f, -2.5f, -2.5f);
-	glTexCoord2f(5.0f, 5.0f);
-	glVertex3f(0.0f, 2.5f, -2.5f);
-	glTexCoord2f(10.0f, 0.0f);
-	glVertex3f(2.5f, -2.5f, -2.5f);
-
-	glEnd();
-
-	//Left
-	glDisable(GL_TEXTURE_2D);
-	glColor3f(1.0f, 0.7f, 0.3f);
-	glBegin(GL_QUADS);
-
-	glNormal3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(-2.5f, -2.5f, 2.5f);
-	glVertex3f(-2.5f, -2.5f, -2.5f);
-	glVertex3f(-2.5f, 2.5f, -2.5f);
-	glVertex3f(-2.5f, 2.5f, 2.5f);
-
-	glEnd();
-
-	glutSwapBuffers();
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
+	srand((unsigned int)time(0)); //Seed the random number generator using system time
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(400, 400);
-
-	glutCreateWindow("Textures - videotutorialsrock.com");
-	initRendering();
-
-	glutDisplayFunc(drawScene);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+	glutInitWindowSize(500, 500);
+	glutInitWindowPosition(100, 100);
+	glutCreateWindow("Particle System");
+	init();
+	glutDisplayFunc(display);
+	glutIdleFunc(display);
 	glutKeyboardFunc(handleKeypress);
-	glutReshapeFunc(handleResize);
-
+	glutReshapeFunc(reshape);
 	glutMainLoop();
 	return 0;
 }
 
+// Functions to load RAW files
+// I did not write the following functions.
+// They are form the OpenGL tutorials at http://www.swiftless.com
+GLuint LoadTextureRAW(const char* filename, int width, int height)
+{
+	GLuint texture;
+	unsigned char* data;
+	FILE* file;
+	fopen_s(&file, filename, "rb");
+	if (file == nullptr) return 0;
+	data = (unsigned char *)malloc(width * height * 3);
+	fread(data, width * height * 3, 1, file);
+	fclose(file);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+	free(data);
+	return texture;
+}
 
-
-
-
-
-
-
-
+void FreeTexture(GLuint texture)
+{
+	glDeleteTextures(1, &texture);
+}

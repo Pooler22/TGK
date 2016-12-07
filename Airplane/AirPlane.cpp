@@ -69,8 +69,10 @@ void AirPlane::drawBullet()
 
 void AirPlane::drawPlain() const
 {
-	glTranslatef(cam.lookAt.x + cam.position.x,
-	             cam.lookAt.y + cam.position.y,
-	             cam.lookAt.z + cam.position.z);
+	//glTranslatef(cam.lookAt.x + cam.position.x,
+	//             cam.lookAt.y + cam.position.y,
+	//             cam.lookAt.z + cam.position.z);
+	glTranslatef(0,-.2,-.4);
+
 	glutSolidSphere(0.05f, 32, 16);
 }
