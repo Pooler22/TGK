@@ -22,16 +22,17 @@ Mountain mountain;
 System particleSystem;
 
 
-void DrawParticles(void)
+void drawParticles(void)
 {
-	
 	glScalef(0.1, 0.1, 0.1);
 	glRotatef(90, 1, 0, 0);
 	glTranslatef(0, 5, 4);
-	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f(0.4, 0.0, 0.0);
 	for (auto i = 1; i < particleSystem.getNumOfParticles(); i++)
 	{
 		glPushMatrix();
+
 		// set color and fade value (alpha) of current particle
 		glColor4f(particleSystem.getR(i), particleSystem.getG(i), particleSystem.getB(i), particleSystem.getAlpha(i));
 		// move the current particle to its new position
@@ -76,38 +77,7 @@ void DrawParticles(void)
 
 		glPopMatrix();
 	}
-
-	
 }
-
-
-GLuint LoadTextureRAW(const char* filename, int width, int height)
-{
-	GLuint texture_t;
-	unsigned char* data;
-	FILE* file;
-	fopen_s(&file, filename, "rb");
-	if (file == nullptr) return 0;
-	data = static_cast<unsigned char *>(malloc(width * height * 3));
-	fread(data, width * height * 3, 1, file);
-	fclose(file);
-	glGenTextures(1, &texture_t);
-	glBindTexture(GL_TEXTURE_2D, texture_t);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
-	free(data);
-	return texture_t;
-}
-
-void FreeTexture(GLuint texture_t)
-{
-	glDeleteTextures(1, &texture_t);
-}
-
 
 void init(void)
 {
@@ -168,7 +138,6 @@ void display(void)
 	glClearDepth(1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
 	glEnable(GL_FOG); // włączenie efektu mgły
 	glHint(GL_FOG_HINT, GL_DONT_CARE); // wskazówki jakości generacji mgły
 	if (isDay)
@@ -185,8 +154,8 @@ void display(void)
 	glFogf(GL_FOG_START, 1.0); // początek i koniec oddziaływania mgły liniowej
 	glFogf(GL_FOG_END, 2.0);
 
-
-	
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 
 	if (isDay)
 	{
@@ -194,16 +163,11 @@ void display(void)
 		GLfloat diff[] = {1.0f,1.0f,1.0f};
 		GLfloat spec[] = {1.0f,1.0f,1.0f};
 
-		glEnable(GL_LIGHTING);
-		glEnable(GL_LIGHT0);
-
 		glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
 
 		glClearColor(0.9, 0.9, 0.9, 0.0);
-
-		glEnable(GL_DEPTH_TEST);
 	}
 	else
 	{
@@ -211,18 +175,13 @@ void display(void)
 		GLfloat diff[] = {1.0f,1.0f,0.1f};
 		GLfloat spec[] = {1.0f,1.0f,0.1f};
 
-		glEnable(GL_LIGHTING);
-		glEnable(GL_LIGHT0);
-
 		glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
 
 		glClearColor(0.0, 0.0, 0.0, 0.1);
-
-		glEnable(GL_DEPTH_TEST);
 	}
-
+	glEnable(GL_DEPTH_TEST);
 
 	GLfloat tanamb[] = {0.2,0.15,0.1,1.0};
 	GLfloat tandiff[] = {0.4,0.3,0.2,1.0};
@@ -234,8 +193,6 @@ void display(void)
 
 	GLfloat lpos[] = {0.0,0.0,10.0,0.0}; // sun
 
-
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glColor3f(1.0, 1.0, 1.0);
 	glLoadIdentity();
@@ -243,27 +200,17 @@ void display(void)
 	keyboardFlag();
 
 
-	
 	///////////////
 
 	glPushMatrix();
-
-	
-
 	particleSystem.updateParticles();
-	DrawParticles();
-
-	/*glScalef(1000, 1000, 1000);
-	glTranslatef(0, 0, 0.050);
-	glRotatef(-30, 1, 0, 0);*/
-
+	drawParticles();
 	glPopMatrix();
 
 	//////////////////
 
 	ap.drawPlain();
 	ap.moveForward(sealevel);
-
 	ap.updateCamera();
 	menu.drawStrings();
 
@@ -302,12 +249,8 @@ void display(void)
 	glVertex3f(-5, 5, sealevel);
 	glEnd();
 
-
 	ap.drawBullet();
-
-
-	/*particleSystem.updateParticles();
-	DrawParticles();*/
+	
 	glutSwapBuffers();
 	glFlush();
 	glutPostRedisplay();
@@ -318,7 +261,7 @@ void reshape(int w, int h)
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60.0, float(w) / h, 0.01, 10.0);
+	gluPerspective(60.f, float(w) / h, 0.01f, 10.f);
 	glMatrixMode(GL_MODELVIEW);
 }
 

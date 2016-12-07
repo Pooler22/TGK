@@ -4,18 +4,18 @@
 
 AirPlane::AirPlane(GLuint texture): Texturable(texture), model(0)
 {
-	moveSpeed = 0.005f;
+	moveSpeed = moveSpeedStep;
 	cam.updateVectors();
 }
 
 void AirPlane::increaseSpeed()
 {
-	moveSpeed += 0.001f;
+	moveSpeed += moveSpeedStep;
 }
 
 void AirPlane::decreaseSpeed()
 {
-	moveSpeed -= 0.001f;
+	moveSpeed -= moveSpeedStep;
 }
 
 void AirPlane::updateCamera() const
@@ -67,12 +67,8 @@ void AirPlane::drawBullet()
 	}
 }
 
-void AirPlane::drawPlain() const
+void AirPlane::drawPlain()
 {
-	//glTranslatef(cam.lookAt.x + cam.position.x,
-	//             cam.lookAt.y + cam.position.y,
-	//             cam.lookAt.z + cam.position.z);
-	glTranslatef(0,-.3,-.9);
-
+	glTranslatef(0, -.3, -.9);
 	glutSolidSphere(0.05f, 32, 16);
 }

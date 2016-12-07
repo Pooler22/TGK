@@ -55,3 +55,32 @@ GLuint Texturable::LoadTexture(const char* filename)
 
 	return texture;
 }
+
+GLuint LoadTextureRAW(const char* filename, int width, int height)
+{
+	GLuint texture_t;
+	unsigned char* data;
+	FILE* file;
+	fopen_s(&file, filename, "rb");
+	if (file == nullptr) return 0;
+	data = static_cast<unsigned char *>(malloc(width * height * 3));
+	fread(data, width * height * 3, 1, file);
+	fclose(file);
+	glGenTextures(1, &texture_t);
+	glBindTexture(GL_TEXTURE_2D, texture_t);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+	free(data);
+	return texture_t;
+}
+
+void FreeTexture(GLuint texture_t)
+{
+	glDeleteTextures(1, &texture_t);
+}
+
+

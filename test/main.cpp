@@ -11,7 +11,7 @@ GLfloat texture[10];
 GLuint LoadTextureRAW(const char* filename, int width, int height);
 void FreeTexture(GLuint texturez);
 
-void DrawParticles(void)
+void drawParticles(void)
 {
 	int i;
 	for (i = 1; i < particleSystem.getNumOfParticles(); i++)
@@ -72,7 +72,7 @@ void display(void)
 	glTranslatef(0, 0, -10);
 
 	particleSystem.updateParticles();
-	DrawParticles();
+	drawParticles();
 
 	glutSwapBuffers();
 }

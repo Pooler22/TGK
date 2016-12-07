@@ -8,6 +8,7 @@
 class AirPlane : public Texturable
 {
 public:
+	const float moveSpeedStep = 0.001f;
 	float moveSpeed;
 	Camera cam;
 	Bullet bul;
@@ -22,7 +23,7 @@ public:
 	void decreaseSpeed();
 	void shootBullet();
 	void drawBullet();
-	void drawPlain() const;
+	static void drawPlain();
 };
 
 #endif
