@@ -12,7 +12,7 @@ System::~System(void)
 /*
 * initalizes a single particle according to its type
 */
-void System::createParticle(Particle *p) const
+void System::createParticle(Particle* p) const
 {
 	if (systemType == Fire || systemType == FireWithSmoke)
 	{
@@ -135,7 +135,7 @@ void System::updateParticles(void)
 		if (systemType == Smoke || particles[i].type == 1)
 			particles[i].scale = particles[i].scale + 0.001; //increasing scale makes textures bigger over lifetime
 
-		particles[i].direction = particles[i].direction + ((((((int)(0.5) * rand() % 11) + 1)) * rand() % 11) + 1);
+		particles[i].direction = particles[i].direction + (((int)0.5 * rand() % 11 + 1) * rand() % 11 + 1);
 
 		particles[i].position[X] = particles[i].position[X] + particles[i].movement[X] + particles[i].pull[X];
 		particles[i].position[Y] = particles[i].position[Y] + particles[i].movement[Y] + particles[i].pull[Y];
@@ -196,7 +196,7 @@ void System::updateParticles(void)
 			{
 				if (particles[i].age > particles[i].lifespan || particles[i].position[Y] > 35 || particles[i].position[Y] < -25 || particles[i].position[X] > 40 || particles[i].position[X] < -40)
 				{
-					int temp = rand() % 100;
+					auto temp = rand() % 100;
 					if (temp < 10)
 						turnToSmoke(&particles[i]);
 					else
@@ -216,7 +216,7 @@ void System::updateParticles(void)
 * used only by updateparticles() and only when the fire and smoke system is active
 * used to turn selected fire particles into smoke
 */
-void System::turnToSmoke(Particle *p)
+void System::turnToSmoke(Particle* p)
 {
 	p->lifespan = (((rand() % 125 + 1) / 10.0f) + 5);
 	p->age = 0.0f;
@@ -252,6 +252,7 @@ float System::getYPos(int i)
 {
 	return particles[i].position[Y];
 }
+
 float System::getZPos(int i)
 {
 	return particles[i].position[Z];
@@ -266,6 +267,7 @@ float System::getG(int i)
 {
 	return particles[i].color[Y];
 }
+
 float System::getB(int i)
 {
 	return particles[i].color[Z];

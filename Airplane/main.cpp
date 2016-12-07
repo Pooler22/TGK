@@ -13,20 +13,22 @@ bool leftKey = false;
 bool rightKey = false;
 bool isDay = true;
 
-float sealevel;
-
-GLfloat texture[10];
+GLfloat sealevel;
+GLfloat texture_t[10];
 
 AirPlane ap = AirPlane(Texturable::LoadTexture("steel.bmp"));
 Menu menu;
 Mountain mountain;
-
 System particleSystem;
 
-GLfloat texture_t[10];
 
 void DrawParticles(void)
 {
+	
+	glScalef(0.1, 0.1, 0.1);
+	glRotatef(90, 1, 0, 0);
+	glTranslatef(0, 5, 4);
+	
 	for (auto i = 1; i < particleSystem.getNumOfParticles(); i++)
 	{
 		glPushMatrix();
@@ -35,14 +37,14 @@ void DrawParticles(void)
 		// move the current particle to its new position
 		glTranslatef(particleSystem.getXPos(i), particleSystem.getYPos(i), particleSystem.getZPos(i)); //+ zoom
 		// rotate the particle (this is proof of concept for when proper smoke texture_t is added)
-		glRotatef(particleSystem.getDirection(i) - 90, 0, 0, 1);
+		glRotatef(particleSystem.getDirection(i) - 0, 0, 0, 1);
 		// scale the wurrent particle (only used for smoke)
 		glScalef(particleSystem.getScale(i), particleSystem.getScale(i), particleSystem.getScale(i));
 
-		glDisable(GL_DEPTH_TEST);
-		glEnable(GL_BLEND);
+		//glDisable(GL_DEPTH_TEST);
+		//glEnable(GL_BLEND);
 
-		glBlendFunc(GL_DST_COLOR, GL_ZERO);
+		//glBlendFunc(GL_DST_COLOR, GL_ZERO);
 		glBindTexture(GL_TEXTURE_2D, texture_t[0]);
 
 		glBegin(GL_QUADS);
@@ -56,7 +58,7 @@ void DrawParticles(void)
 		glVertex3f(-0.1, 0.1, 0);
 		glEnd();
 
-		glBlendFunc(GL_ONE, GL_ONE);
+		//glBlendFunc(GL_ONE, GL_ONE);
 		glBindTexture(GL_TEXTURE_2D, texture_t[1]);
 
 		glBegin(GL_QUADS);
@@ -70,10 +72,12 @@ void DrawParticles(void)
 		glVertex3f(-0.1, 0.1, 0);
 		glEnd();
 
-		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_DEPTH_TEST);
 
 		glPopMatrix();
 	}
+
+	
 }
 
 
@@ -84,7 +88,7 @@ GLuint LoadTextureRAW(const char* filename, int width, int height)
 	FILE* file;
 	fopen_s(&file, filename, "rb");
 	if (file == nullptr) return 0;
-	data = (unsigned char *)malloc(width * height * 3);
+	data = static_cast<unsigned char *>(malloc(width * height * 3));
 	fread(data, width * height * 3, 1, file);
 	fclose(file);
 	glGenTextures(1, &texture_t);
@@ -131,8 +135,8 @@ void init(void)
 	mountain = Mountain();
 	mountain.makemountain();
 
-	texture_t[0] = LoadTextureRAW("particle_mask.raw", 256, 256); //load alpha for texture_t
-	texture_t[1] = LoadTextureRAW("particle.raw", 256, 256); //load texture_t
+	//texture_t[0] = LoadTextureRAW("particle_mask.raw", 256, 256); //load alpha for texture_t
+	//texture_t[1] = LoadTextureRAW("particle.raw", 256, 256); //load texture_t
 
 	particleSystem.setSystemType(4);
 	particleSystem.createParticles();
@@ -164,6 +168,7 @@ void display(void)
 	glClearDepth(1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
 	glEnable(GL_FOG); // włączenie efektu mgły
 	glHint(GL_FOG_HINT, GL_DONT_CARE); // wskazówki jakości generacji mgły
 	if (isDay)
@@ -179,6 +184,9 @@ void display(void)
 	glFogf(GL_FOG_MODE, GL_EXP2); // rodzaj mgły
 	glFogf(GL_FOG_START, 1.0); // początek i koniec oddziaływania mgły liniowej
 	glFogf(GL_FOG_END, 2.0);
+
+
+	
 
 	if (isDay)
 	{
@@ -226,6 +234,8 @@ void display(void)
 
 	GLfloat lpos[] = {0.0,0.0,10.0,0.0}; // sun
 
+
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glColor3f(1.0, 1.0, 1.0);
 	glLoadIdentity();
@@ -233,23 +243,23 @@ void display(void)
 	keyboardFlag();
 
 
+	
 	///////////////
 
 	glPushMatrix();
 
-	glTranslatef(0, 0, -0.050);
-	glScalef(0.001, 0.001, 0.001);
+	
 
 	particleSystem.updateParticles();
 	DrawParticles();
 
-	glScalef(1000, 1000, 1000);
+	/*glScalef(1000, 1000, 1000);
 	glTranslatef(0, 0, 0.050);
+	glRotatef(-30, 1, 0, 0);*/
 
 	glPopMatrix();
 
 	//////////////////
-
 
 	ap.drawPlain();
 	ap.moveForward(sealevel);
