@@ -4,6 +4,7 @@
 #include "Texturable.h"
 #include "Camera.h"
 #include "Bullet.h"
+#include "Model.h"
 
 class AirPlane : public Texturable
 {
@@ -13,6 +14,7 @@ public:
 	Camera cam;
 	Bullet bul;
 	GLuint model;
+	Model modelAirplane;
 
 	explicit AirPlane(GLuint texture);
 	void updateCamera() const;
@@ -23,7 +25,7 @@ public:
 	void decreaseSpeed();
 	void shootBullet();
 	void drawBullet();
-	static void drawPlain();
+	void drawPlain();
 };
 
 #endif

@@ -110,6 +110,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <EmbeddedResource Include="airplane.ply">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <EmbeddedResource Include="particle.raw">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
@@ -130,6 +134,7 @@
       </DeploymentContent>
     </ClCompile>
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="Mountain.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="System.cpp" />
@@ -141,6 +146,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DrawString.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Mountain.h" />
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="System.h" />
@@ -152,10 +158,10 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <_EmbedManagedResourceFile Include="model.obj">
+    <EmbeddedResource Include="model.obj">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
-    </_EmbedManagedResourceFile>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

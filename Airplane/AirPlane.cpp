@@ -4,6 +4,7 @@
 
 AirPlane::AirPlane(GLuint texture): Texturable(texture), model(0)
 {
+	modelAirplane.Load("airplane.ply");
 	moveSpeed = moveSpeedStep;
 	cam.updateVectors();
 }
@@ -69,6 +70,23 @@ void AirPlane::drawBullet()
 
 void AirPlane::drawPlain()
 {
-	glTranslatef(0, -.3, -.9);
-	glutSolidSphere(0.05f, 32, 16);
+
+	GLfloat tanamb[] = { 0.2,0.15,0.1,1.0 };
+	GLfloat tandiff[] = { 0.4,0.3,0.2,1.0 };
+	GLfloat tanspec[] = { 0.0,0.0,0.0,1.0 };
+
+	/*glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, tanamb);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, tandiff);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tanspec);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0);*/
+	glTranslatef(0.17, -0.3, -.9);
+
+	glPushMatrix();
+	glScalef(0.0002, 0.0002, 0.0002);
+	glRotatef(90, 1, 0, 0);
+	glRotatef(-180, 0, 1, 0);
+	modelAirplane.Draw();
+	glPopMatrix();
+
+//	glutSolidSphere(0.05f, 32, 16);
 }
