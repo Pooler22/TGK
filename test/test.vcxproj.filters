@@ -12,14 +12,21 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="imageloader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imageloader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="particle.raw" />
     <EmbeddedResource Include="particle_mask.raw" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="vtr.bmp" />
   </ItemGroup>
 </Project>

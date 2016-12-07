@@ -44,10 +44,10 @@
     <Image Include="bricks.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="steel.bmp">
+    <Image Include="wood.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="wood.bmp">
+    <Image Include="steel.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -1,17 +1,19 @@
 #ifndef AirPlane_h
 #define AirPlane_h
 
+#include "Texturable.h"
 #include "Camera.h"
 #include "Bullet.h"
 
-class AirPlane
+class AirPlane : public Texturable
 {
 public:
 	float moveSpeed;
 	Camera cam;
 	Bullet bul;
+	GLuint model;
 
-	AirPlane();
+	explicit AirPlane(GLuint texture);
 	void updateCamera() const;
 	void updateRoll(float deg);
 	void updatePitch(float deg);

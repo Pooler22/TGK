@@ -8,6 +8,7 @@ void DrawString::draw(std::string str, int w, int h, int x, int y)
 	glPushMatrix();
 	glLoadIdentity();
 	gluOrtho2D(0, w, h, 0);
+
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
@@ -21,6 +22,7 @@ void DrawString::draw(std::string str, int w, int h, int x, int y)
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
+
 	glMatrixMode(GL_MODELVIEW);
 	glEnable(GL_LIGHTING);
 }

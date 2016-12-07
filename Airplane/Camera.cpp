@@ -39,5 +39,5 @@ void Camera::updateVectors()
 {
 	lookAt = op2(rotation, *new glm::vec3(1.0, 0.0, 0.0));
 	up = op2(rotation, *new glm::vec3(0.0, 1.0, 0.0));
-	std::cout << rotation.x << "\t" << rotation.y << "\t" << rotation.z << "\n";
+	//std::cout << up.x << "\t" << up.y << "\t" << up.z << "\n";
 }

@@ -2,7 +2,7 @@
 #include <gl/freeglut.h>
 
 
-AirPlane::AirPlane()
+AirPlane::AirPlane(GLuint texture): Texturable(texture), model(0)
 {
 	moveSpeed = 0.005f;
 	cam.updateVectors();

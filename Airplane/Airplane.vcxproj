@@ -117,9 +117,14 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DrawString.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.cpp">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </DeploymentContent>
+    </ClCompile>
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Mountain.cpp" />
+    <ClCompile Include="ObjLoader.cpp" />
+    <ClCompile Include="Texturable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AirPlane.h" />
@@ -128,6 +133,19 @@
     <ClInclude Include="DrawString.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Mountain.h" />
+    <ClInclude Include="ObjLoader.h" />
+    <ClInclude Include="Texturable.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="steel.bmp">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <_EmbedManagedResourceFile Include="model.obj">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </_EmbedManagedResourceFile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

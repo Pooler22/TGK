@@ -36,7 +36,13 @@
     <ClCompile Include="Mountain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Texturable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ObjLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AirPlane.h">
@@ -57,5 +63,19 @@
     <ClInclude Include="Mountain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Texturable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="steel.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <_EmbedManagedResourceFile Include="model.obj" />
   </ItemGroup>
 </Project>

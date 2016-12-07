@@ -17,7 +17,7 @@ float sealevel;
 
 GLfloat texture[10];
 
-AirPlane ap;
+AirPlane ap = AirPlane(Texturable::LoadTexture("steel.bmp"));
 Menu menu;
 Mountain mountain;
 
@@ -42,6 +42,7 @@ void init(void)
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
 
+	
 	menu = Menu();
 	mountain = Mountain();
 	mountain.makemountain();
@@ -140,6 +141,7 @@ void display(void)
 	glLoadIdentity();
 
 	keyboardFlag();
+	ap.drawPlain();
 	ap.moveForward(sealevel);
 
 	ap.updateCamera();
@@ -180,7 +182,7 @@ void display(void)
 	glVertex3f(-5, 5, sealevel);
 	glEnd();
 
-	ap.drawPlain();
+	
 	ap.drawBullet();
 
 
