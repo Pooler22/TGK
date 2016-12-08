@@ -17,6 +17,8 @@ void Menu::drawStrings() const
 		ds.draw("  +   - foggy", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 38);
 		ds.draw("mouse button left", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 42);
 		ds.draw("mouse button right", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 46);
+		ds.draw("num keyboard", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 46);
+		ds.draw("  0  - reset", GLUT_WINDOW_WIDTH, GLUT_WINDOW_HEIGHT, 1, 46);
 	}
 }
 

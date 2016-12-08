@@ -21,11 +21,13 @@ int button_y;
 GLfloat scale = 1.0f;
 GLfloat rotatex = 0.0f;
 GLfloat rotatey = 0.0f;
+GLfloat rotatez = 0.0f;
 GLfloat translatex = 0.0f;
 GLfloat translatey = 0.0f;
+GLfloat translatez = 0.0f;
 GLfloat movex = 0.0f;
 GLfloat movey = 0.0f;
-
+GLfloat movez = 0.0f;
 
 GLfloat sealevel;
 
@@ -154,6 +156,7 @@ void display(void)
 	glTranslatef(translatex, translatey, 0.0);
 	
 	glScalef(scale, scale, scale);
+	glTranslatef(-movex, -movey, -movez);
 
 	ps.draw();
 	ap.drawPlain();
@@ -161,6 +164,7 @@ void display(void)
 	ap.updateCamera();
 	menu.drawStrings();
 
+	glTranslatef(movex, movey, -movez);
 
 	// send the light position down as if it was a vertex in world coordinates
 	glLightfv(GL_LIGHT0, GL_POSITION, lpos);
@@ -197,6 +201,7 @@ void display(void)
 	glVertex3f(-5, 5, sealevel);
 	glEnd();
 
+	
 	ap.drawBullet();
 
 	glutSwapBuffers();
@@ -286,6 +291,30 @@ void keyboard(unsigned char key, int x, int y)
 		break;
 	case 'd':
 		isDay = !isDay;
+		break;
+	case '8':
+		movey -= 0.1f;
+		break;
+	case '2':
+		movey += 0.1f;
+		break;
+	case '4':
+		movez -= 0.1f;
+		break;
+	case '6':
+		movez += 0.1f;
+		break;
+	case '9':
+		movex -= 0.1f;
+		break;
+	case '3':
+		movex += 0.1f;
+		break;
+	case '0':
+		movex = movey = movez = 0.0f;
+		translatex = translatey = translatez = 0.0f;
+		rotatex = rotatey = rotatez = 0.0f;
+		scale = 1.0f;
 		break;
 	case 27:
 		exit(0);
