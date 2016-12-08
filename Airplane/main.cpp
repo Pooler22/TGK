@@ -1,17 +1,31 @@
 ﻿#include <gl/freeglut.h>
 #include <glm/glm.hpp>
 #include "AirPlane.h"
-#include "DrawString.h"
 #include "Menu.h"
 #include "Mountain.h"
 #include <ctime>
 #include "ParticleSystem.h"
+#include <iostream>
 
 bool upKey = false;
 bool downKey = false;
 bool leftKey = false;
 bool rightKey = false;
 bool isDay = true;
+
+
+int button_state_left = GLUT_UP;
+int button_state_right = GLUT_UP;
+int button_x;
+int button_y;
+GLfloat scale = 1.0f;
+GLfloat rotatex = 0.0f;
+GLfloat rotatey = 0.0f;
+GLfloat translatex = 0.0f;
+GLfloat translatey = 0.0f;
+GLfloat movex = 0.0f;
+GLfloat movey = 0.0f;
+
 
 GLfloat sealevel;
 
@@ -23,7 +37,8 @@ ParticleSystem ps;
 
 void init(void)
 {
-	sealevel = -0.2;
+	sealevel = -0.2f;
+
 	GLfloat amb[] = {0.2f,0.2f,0.2f};
 	GLfloat diff[] = {1.0f,1.0f,1.0f};
 	GLfloat spec[] = {1.0f,1.0f,1.0f};
@@ -35,7 +50,6 @@ void init(void)
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
 
-	glClearColor(0.5, 0.5, 1.0, 0.0); // sky
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -51,7 +65,7 @@ void init(void)
 
 void keyboardFlag()
 {
-	const auto deegre = 90;
+	const auto deegre = 90.f;
 	if (leftKey)
 	{
 		ap.updateRoll(-deegre);
@@ -72,8 +86,7 @@ void keyboardFlag()
 
 void display(void)
 {
-	glClearDepth(1);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	GLfloat* a;
 
 	glEnable(GL_FOG); // włączenie efektu mgły
 	glHint(GL_FOG_HINT, GL_DONT_CARE); // wskazówki jakości generacji mgły
@@ -86,14 +99,13 @@ void display(void)
 		glFogfv(GL_FOG_COLOR, new float[4]{0,0,0,1}); // kolor mgły
 	}
 
-	glFogf(GL_FOG_DENSITY, 0.2); // gęstość mgły
+	glFogf(GL_FOG_DENSITY, 0.2f); // gęstość mgły
 	glFogf(GL_FOG_MODE, GL_EXP2); // rodzaj mgły
-	glFogf(GL_FOG_START, 1.0); // początek i koniec oddziaływania mgły liniowej
-	glFogf(GL_FOG_END, 2.0);
+	glFogf(GL_FOG_START, 1.0f); // początek i koniec oddziaływania mgły liniowej
+	glFogf(GL_FOG_END, 2.0f);
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-
 	if (isDay)
 	{
 		GLfloat amb[] = {0.2f,0.2f,0.2f};
@@ -103,8 +115,7 @@ void display(void)
 		glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
-
-		glClearColor(0.9, 0.9, 0.9, 0.0);
+		a = new GLfloat[4]{0.9f, 0.9f, 0.9f, 0.0f};
 	}
 	else
 	{
@@ -115,32 +126,41 @@ void display(void)
 		glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
-
-		glClearColor(0.0, 0.0, 0.0, 0.1);
+		a = new GLfloat[4]{0.0f, 0.0f, 0.0f, 0.1f};
 	}
+
+	// kolor tłaglClear
+	glClearColor(a[0], a[1], a[2], a[3]);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	glEnable(GL_DEPTH_TEST);
 
-	GLfloat tanamb[] = {0.2,0.15,0.1,1.0};
-	GLfloat tandiff[] = {0.4,0.3,0.2,1.0};
-	GLfloat tanspec[] = {0.0,0.0,0.0,1.0}; // dirt doesn't glisten
+	GLfloat tanamb[] = {0.2f,0.15f,0.1f,1.0f};
+	GLfloat tandiff[] = {0.4f,0.3f,0.2f,1.0f};
+	GLfloat tanspec[] = {0.0f,0.0f,0.0f,1.0f}; // dirt doesn't glisten
 
-	GLfloat seaamb[] = {0.0,0.0,0.2,1.0};
-	GLfloat seadiff[] = {0.0,0.0,0.8,1.0};
-	GLfloat seaspec[] = {0.5,0.5,1.0,1.0}; // Single polygon, will only have highlight if light hits a vertex just right
+	GLfloat seaamb[] = {0.0f,0.0f,0.2f,1.0f};
+	GLfloat seadiff[] = {0.0f,0.0f,0.8f,1.0f};
+	GLfloat seaspec[] = {0.5f,0.5f,1.0f,1.0f}; // Single polygon, will only have highlight if light hits a vertex just right
 
-	GLfloat lpos[] = {0.0,0.0,10.0,0.0}; // sun
+	GLfloat lpos[] = {0.0f,0.0f,10.0f,0.0f}; // sun
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glColor3f(1.0, 1.0, 1.0);
 	glLoadIdentity();
 
 	keyboardFlag();
+
+	glRotatef(rotatex, 1.0, 0, 0);
+	glRotatef(rotatey, 0, 1.0, 0);
+	glTranslatef(translatex, translatey, 0.0);
+	
+	glScalef(scale, scale, scale);
 
 	ps.draw();
 	ap.drawPlain();
 	ap.moveForward(sealevel);
 	ap.updateCamera();
 	menu.drawStrings();
+
 
 	// send the light position down as if it was a vertex in world coordinates
 	glLightfv(GL_LIGHT0, GL_POSITION, lpos);
@@ -180,7 +200,6 @@ void display(void)
 	ap.drawBullet();
 
 	glutSwapBuffers();
-	glFlush();
 	glutPostRedisplay();
 }
 
@@ -245,11 +264,19 @@ void keyboard(unsigned char key, int x, int y)
 		break;
 
 	case '-':
-		sealevel -= 0.01;
+		scale -= 0.1f;
 		break;
 	case '+':
 	case '=':
-		sealevel += 0.01;
+		scale += 0.1f;
+		break;
+	case '}':
+	case ']':
+		sealevel -= 0.01f;
+		break;
+	case '{':
+	case '[':
+		sealevel += 0.01f;
 		break;
 	case 'h':
 		menu.changeVisibilityMenu();
@@ -266,6 +293,48 @@ void keyboard(unsigned char key, int x, int y)
 	}
 }
 
+void mousemotion(int x, int y)
+{
+	if (button_state_left == GLUT_DOWN)
+	{
+		translatex += 0.8f/ glutGet(GLUT_WINDOW_WIDTH) * (x - button_x);
+		button_x = x;
+		translatey += 0.8f/ glutGet(GLUT_WINDOW_HEIGHT) * (button_y - y);
+		button_y = y;
+	}
+	if (button_state_right == GLUT_DOWN)
+	{
+		rotatey += 40.f/ glutGet(GLUT_WINDOW_WIDTH) * (x - button_x);
+		button_x = x;
+		rotatex -= 40.f/ glutGet(GLUT_WINDOW_HEIGHT) * (button_y - y);
+		button_y = y;
+	}
+	glutPostRedisplay();
+}
+
+void mousebutton(int button, int state, int x, int y)
+{
+	if (button == GLUT_LEFT_BUTTON)
+	{
+		button_state_left = state;
+		if (state == GLUT_DOWN)
+		{
+			button_x = x;
+			button_y = y;
+		}
+	}
+
+	if (button == GLUT_RIGHT_BUTTON)
+	{
+		button_state_right = state;
+		if (state == GLUT_DOWN)
+		{
+			button_x = x;
+			button_y = y;
+		}
+	}
+}
+
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
@@ -279,6 +348,8 @@ int main(int argc, char** argv)
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(arrowkeys);
 	glutSpecialUpFunc(allowkeysup);
+	glutMouseFunc(mousebutton);
+	glutMotionFunc(mousemotion);
 	glutMainLoop();
 	return 0;
 }

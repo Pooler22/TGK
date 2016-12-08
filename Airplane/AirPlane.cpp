@@ -70,13 +70,13 @@ void AirPlane::drawBullet()
 
 void AirPlane::drawPlain() const
 {
-	glTranslatef(0.17, -0.3, -.9);
+	glTranslatef(0.18f, -0.4f, -1.13f);
 
 	glPushMatrix();
 
-	glScalef(0.0002, 0.0002, 0.0002);
-	glRotatef(90, 1, 0, 0);
-	glRotatef(-180, 0, 1, 0);
+	glScalef(0.0002f, 0.0002f, 0.0002f);
+	glRotatef(90.f, 1.f, 0.f, 0.f);
+	glRotatef(-180.f, 0.f, 1.f, 0.f);
 
 	modelAirplane.Draw();
 

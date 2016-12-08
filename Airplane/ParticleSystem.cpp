@@ -19,11 +19,11 @@ void ParticleSystem::draw()
 
 void ParticleSystem::drawParticles(void)
 {
-	glScalef(0.1, 0.1, 0.1);
-	glRotatef(90, 1, 0, 0);
-	glTranslatef(0, 5, 4);
+	glScalef(0.1f, 0.1f, 0.1f);
+	glRotatef(90.f, 1.f, 0.f, 0.f);
+	glTranslatef(0.f, 5.f, 4.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glColor3f(0.4, 0.0, 0.0);
+	//glColor3f(0.4, 0.0, 0.glScalef0);
 	for (auto i = 1; i < particleSystem.getNumOfParticles(); i++)
 	{
 		glPushMatrix();
@@ -43,28 +43,28 @@ void ParticleSystem::drawParticles(void)
 		glBindTexture(GL_TEXTURE_2D, texture_t[0]);
 
 		glBegin(GL_QUADS);
-		glTexCoord2d(0, 0);
-		glVertex3f(-0.1, -0.1, 0);
-		glTexCoord2d(0.1, 0);
-		glVertex3f(0.1, -0.1, 0);
-		glTexCoord2d(0.1, 0.1);
-		glVertex3f(0.1, 0.1, 0);
-		glTexCoord2d(0, 0.1);
-		glVertex3f(-0.1, 0.1, 0);
+		glTexCoord2d(0.f, 0.f);
+		glVertex3f(-0.1f, -0.1f, 0.f);
+		glTexCoord2d(0.1f, 0.f);
+		glVertex3f(0.1f, -0.1f, 0.f);
+		glTexCoord2d(0.1f, 0.1f);
+		glVertex3f(0.1f, 0.1f, 0.f);
+		glTexCoord2d(0.f, 0.1f);
+		glVertex3f(-0.1f, 0.1f, 0.f);
 		glEnd();
 
 		glBlendFunc(GL_ONE, GL_ONE);
 		glBindTexture(GL_TEXTURE_2D, texture_t[1]);
 
 		glBegin(GL_QUADS);
-		glTexCoord2d(0, 0);
-		glVertex3f(-0.1, -0.1, 0);
-		glTexCoord2d(0.1, 0);
-		glVertex3f(0.1, -0.1, 0);
-		glTexCoord2d(0.1, 0.1);
-		glVertex3f(0.1, 0.1, 0);
-		glTexCoord2d(0, 0.1);
-		glVertex3f(-0.1, 0.1, 0);
+		glTexCoord2d(0.f, 0.f);
+		glVertex3f(-0.1f, -0.1f, 0.f);
+		glTexCoord2d(0.1f, 0.f);
+		glVertex3f(0.1f, -0.1f, 0.f);
+		glTexCoord2d(0.1f, 0.1f);
+		glVertex3f(0.1f, 0.1f, 0.f);
+		glTexCoord2d(0.f, 0.1f);
+		glVertex3f(-0.1f, 0.1f, 0.f);
 		glEnd();
 
 		glEnable(GL_DEPTH_TEST);
