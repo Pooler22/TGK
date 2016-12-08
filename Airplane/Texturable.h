@@ -10,8 +10,8 @@ public:
 	explicit Texturable::Texturable(GLuint textureInit);
 	void Texturable::Draw() const;
 	static GLuint Texturable::LoadTexture(const char* filename);
-	GLuint LoadTextureRAW(const char* filename, int width, int height);
-	void FreeTexture(GLuint texture_t);
+	static GLuint Texturable::LoadTextureRAW(const char* filename, int width, int height);
+	static void Texturable::FreeTexture(GLuint texture_t);
 };
 
 #endif

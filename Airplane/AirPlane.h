@@ -25,7 +25,7 @@ public:
 	void decreaseSpeed();
 	void shootBullet();
 	void drawBullet();
-	void drawPlain();
+	void drawPlain() const;
 };
 
 #endif

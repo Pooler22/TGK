@@ -5,12 +5,12 @@
 
 GLuint ObjLoader::loadObj(char* fname)
 {
-	std::vector<float[3]> mdoel = std::vector<float[3]>();;
+	auto mdoel = std::vector<float[3]>();;
 	GLuint loaded_objcet;
 	FILE* fp;
 	int read;
 	GLfloat x, y, z;
-	char ch = '1';
+	auto ch = '1';
 	loaded_objcet = glGenLists(1);
 	fopen_s(&fp, fname, "r");
 	if (!fp)

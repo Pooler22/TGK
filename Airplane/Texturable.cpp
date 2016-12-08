@@ -56,7 +56,7 @@ GLuint Texturable::LoadTexture(const char* filename)
 	return texture;
 }
 
-GLuint LoadTextureRAW(const char* filename, int width, int height)
+GLuint Texturable::LoadTextureRAW(const char* filename, int width, int height)
 {
 	GLuint texture_t;
 	unsigned char* data;
@@ -78,9 +78,7 @@ GLuint LoadTextureRAW(const char* filename, int width, int height)
 	return texture_t;
 }
 
-void FreeTexture(GLuint texture_t)
+void Texturable::FreeTexture(GLuint texture_t)
 {
 	glDeleteTextures(1, &texture_t);
 }
-
-

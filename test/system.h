@@ -20,8 +20,20 @@
 
 typedef float fVector[3];
 
-enum dimensions { X, Y, Z };
-enum type { Smoke = 1, Fountain = 2, Fire = 3, FireWithSmoke = 4 };
+enum dimensions
+{
+	X,
+	Y,
+	Z
+};
+
+enum type
+{
+	Smoke = 1,
+	Fountain = 2,
+	Fire = 3,
+	FireWithSmoke = 4
+};
 
 struct Particle
 {
@@ -41,10 +53,10 @@ class System
 public:
 	System(void);
 	virtual ~System(void);
-	void createParticle(Particle *p); //creates and initalizes a single particle
+	void createParticle(Particle* p); //creates and initalizes a single particle
 	void createParticles(); //calls createParticle() to initalize all particles in system
 	void updateParticles(); //updates particles according to forces being used
-	void turnToSmoke(Particle *p); //called only durring fire with smoke system to turn dead fire into smoke
+	void turnToSmoke(Particle* p); //called only durring fire with smoke system to turn dead fire into smoke
 
 	void setSystemType(int systemType); //sets the particle system type
 	int getNumOfParticles(); // returns the number of particles in the system (legacy)

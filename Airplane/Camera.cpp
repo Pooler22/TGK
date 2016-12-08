@@ -4,10 +4,10 @@
 
 Camera::Camera()
 {
-	rotation = glm::vec4(1, 0.0, 0.0, 1.0);
-	position = glm::vec3(0, 0, 0);
-	lookAt = glm::vec3(0, 1, 0);
-	up = glm::vec3(1, 0, 0);
+	rotation = glm::vec4(1.f, 0.f, 0.f, 1.f);
+	position = glm::vec3(0.f, 0.f, 0.f);
+	lookAt = glm::vec3(0.f, 1.f, 0.f);
+	up = glm::vec3(1.f, 0.f, 0.f);
 }
 
 glm::vec4 op1(glm::vec4& rq1, glm::vec4& rq2)
@@ -39,5 +39,4 @@ void Camera::updateVectors()
 {
 	lookAt = op2(rotation, *new glm::vec3(1.0, 0.0, 0.0));
 	up = op2(rotation, *new glm::vec3(0.0, 1.0, 0.0));
-	//std::cout << up.x << "\t" << up.y << "\t" << up.z << "\n";
 }

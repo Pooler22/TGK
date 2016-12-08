@@ -21,7 +21,7 @@ System::~System(void)
 /*
 * initalizes a single particle according to its type
 */
-void System::createParticle(Particle *p)
+void System::createParticle(Particle* p)
 {
 	if (systemType == Fire || systemType == FireWithSmoke)
 	{
@@ -225,7 +225,7 @@ void System::updateParticles(void)
 * used only by updateparticles() and only when the fire and smoke system is active
 * used to turn selected fire particles into smoke
 */
-void System::turnToSmoke(Particle *p)
+void System::turnToSmoke(Particle* p)
 {
 	p->lifespan = (((rand() % 125 + 1) / 10.0f) + 5);
 	p->age = 0.0f;
@@ -261,6 +261,7 @@ float System::getYPos(int i)
 {
 	return particles[i].position[Y];
 }
+
 float System::getZPos(int i)
 {
 	return particles[i].position[Z];
@@ -275,6 +276,7 @@ float System::getG(int i)
 {
 	return particles[i].color[Y];
 }
+
 float System::getB(int i)
 {
 	return particles[i].color[Z];

@@ -18,7 +18,7 @@ public:
 
 
 	void Spring::Draw(GLfloat move)
-	{		
+	{
 		auto u = 0;
 		auto sinU = sin(u);
 		auto cosU = cos(u);
@@ -38,10 +38,10 @@ public:
 		glPushMatrix();
 		glTranslatef(x, y, z);
 		//glRotatef(90, 0, 1, 0);
-		
+
 		for (GLfloat t = 0; t < 10 * PI; t += precise)
 		{
-			if(t < PI)
+			if (t < PI)
 			{
 				glPushMatrix();
 				glTranslatef(0, -t + move, 0);

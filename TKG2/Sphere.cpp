@@ -4,7 +4,7 @@
 class Sphere : public Texturable
 {
 public:
-	explicit Sphere::Sphere(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLuint texture): Texturable(texture), x(x), y(y), z(z),r(r)
+	explicit Sphere::Sphere(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLuint texture): Texturable(texture), x(x), y(y), z(z), r(r)
 	{
 		glEnable(GL_TEXTURE_2D);
 		sphereObject = gluNewQuadric();
@@ -25,7 +25,7 @@ public:
 	}
 
 	GLUquadric* sphereObject;
-	GLfloat x; 
+	GLfloat x;
 	GLfloat y;
 	GLfloat z;
 	GLfloat r;

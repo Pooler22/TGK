@@ -19,12 +19,12 @@ void MyInit(void)
 void Display(void)
 {
 	GLfloat colors[6][4] = {
-		{ 1,0,0,1 },
-		{ 1,1,0,1 },
-		{ 1,1,1,1 },
-		{ 1,0,1,1 },
-		{ 0,1,0,1 },
-		{ 0,0,1,1 }
+		{1,0,0,1},
+		{1,1,0,1},
+		{1,1,1,1},
+		{1,0,1,1},
+		{0,1,0,1},
+		{0,0,1,1}
 	};
 	std::vector<std::vector<GLfloat>> triangles;
 	GLfloat a = 8, sx = 0, sy = 0, a1 = 3, a2 = 90;
@@ -37,7 +37,7 @@ void Display(void)
 	{
 		for (auto j = 0; j < trianglesCols - i; j++)
 		{
-			triangles.push_back({ sx + (a * i),sy + (a * j), a });
+			triangles.push_back({sx + (a * i),sy + (a * j), a});
 		}
 	}
 	for (auto l = 0; l < quadrantsNumber; l++)
