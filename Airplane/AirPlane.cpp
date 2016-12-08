@@ -75,10 +75,10 @@ void AirPlane::drawPlain()
 	GLfloat tandiff[] = { 0.4,0.3,0.2,1.0 };
 	GLfloat tanspec[] = { 0.0,0.0,0.0,1.0 };
 
-	/*glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, tanamb);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, tanamb);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, tandiff);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tanspec);
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0);*/
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0);
 	glTranslatef(0.17, -0.3, -.9);
 
 	glPushMatrix();

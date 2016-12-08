@@ -7,7 +7,7 @@
 #include <string>
 
 
-Model::Model()
+Model::Model(): Faces_Triangles(nullptr), Faces_Quads(nullptr), Vertex_Buffer(nullptr), Normals(nullptr), TotalConnectedTriangles(0), TotalConnectedQuads(0), TotalConnectedPoints(0), TotalFaces(0)
 {
 }
 
@@ -36,7 +36,6 @@ float* Model::calculateNormal(float* coord1, float* coord2, float* coord3) const
 	norm[1] = vr[1] / val;
 	norm[2] = vr[2] / val;
 
-
 	return norm;
 }
 
@@ -47,7 +46,7 @@ int Model::Load(char* filename)
 	this->TotalConnectedQuads = 0;
 	this->TotalConnectedPoints = 0;
 
-	char* pch = strstr(filename, ".ply");
+	auto pch = strstr(filename, ".ply");
 
 	if (pch != nullptr)
 	{
@@ -55,11 +54,11 @@ int Model::Load(char* filename)
 		fopen_s(&file, filename, "r");
 
 		fseek(file, 0, SEEK_END);
-		long fileSize = ftell(file);
+		auto fileSize = ftell(file);
 
 		try
 		{
-			Vertex_Buffer = (float*)malloc(ftell(file));
+			Vertex_Buffer = static_cast<float*>(malloc(ftell(file)));
 		}
 		catch (char*)
 		{
@@ -68,24 +67,17 @@ int Model::Load(char* filename)
 		if (Vertex_Buffer == nullptr) return -1;
 		fseek(file, 0, SEEK_SET);
 
-		Faces_Triangles = (float*)malloc(fileSize * sizeof(float));
-		Normals = (float*)malloc(fileSize * sizeof(float));
+		Faces_Triangles = static_cast<float*>(malloc(fileSize * sizeof(float)));
+		Normals = static_cast<float*>(malloc(fileSize * sizeof(float)));
 
 		if (file)
 		{
-			int i = 0;
-			int temp = 0;
-			int quads_index = 0;
-			int triangle_index = 0;
-			int normal_index = 0;
+			int i;
+			auto triangle_index = 0;
+			auto normal_index = 0;
 			char buffer[1000];
 
-
 			fgets(buffer, 300, file); // ply
-
-
-			// READ HEADER
-			// -----------------
 
 			// Find number of vertexes
 			while (strncmp("element vertex", buffer, strlen("element vertex")) != 0)
@@ -94,7 +86,6 @@ int Model::Load(char* filename)
 			}
 			strcpy_s(buffer, buffer + strlen("element vertex"));
 			sscanf_s(buffer, "%i", &this->TotalConnectedPoints);
-
 
 			// Find number of vertexes
 			fseek(file, 0, SEEK_SET);
@@ -105,19 +96,15 @@ int Model::Load(char* filename)
 			strcpy_s(buffer, buffer + strlen("element face"));
 			sscanf_s(buffer, "%i", &this->TotalFaces);
 
-
 			// go to end_header
 			while (strncmp("end_header", buffer, strlen("end_header")) != 0)
 			{
 				fgets(buffer, 300, file); // format
 			}
 
-			//----------------------
-
-
 			// read verteces
 			i = 0;
-			for (int iterator = 0; iterator < this->TotalConnectedPoints; iterator++)
+			for (auto iterator = 0; iterator < this->TotalConnectedPoints; iterator++)
 			{
 				fgets(buffer, 300, file);
 
@@ -127,13 +114,13 @@ int Model::Load(char* filename)
 
 			// read faces
 			i = 0;
-			for (int iterator = 0; iterator < this->TotalFaces; iterator++)
+			for (auto iterator = 0; iterator < this->TotalFaces; iterator++)
 			{
 				fgets(buffer, 300, file);
 
 				if (buffer[0] == '3')
 				{
-					int vertex1 = 0, vertex2 = 0, vertex3 = 0;
+					auto vertex1 = 0, vertex2 = 0, vertex3 = 0;
 					buffer[0] = ' ';
 					sscanf_s(buffer, "%i%i%i", &vertex1, &vertex2, &vertex3);
 
@@ -167,12 +154,8 @@ int Model::Load(char* filename)
 					triangle_index += 9;
 					TotalConnectedTriangles += 3;
 				}
-
-
 				i += 3;
 			}
-
-
 			fclose(file);
 		}
 
@@ -185,8 +168,13 @@ int Model::Load(char* filename)
 	return 0;
 }
 
-void Model::Draw()
+void Model::Draw() const
 {
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_POLYGON_SMOOTH);
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, Faces_Triangles);
@@ -194,4 +182,9 @@ void Model::Draw()
 	glDrawArrays(GL_TRIANGLES, 0, TotalConnectedTriangles);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
+
+	glDisable(GL_BLEND);
+	glDisable(GL_LINE_SMOOTH);
+	glDisable(GL_POLYGON_SMOOTH);
+
 }
