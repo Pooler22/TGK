@@ -268,6 +268,13 @@ void keyboard(unsigned char key, int x, int y)
 		ap.decreaseSpeed();
 		break;
 
+	case 'q':
+		ap.updateYaw(90.f);
+		break;
+	case 'w':
+		ap.updateYaw(-90.f);
+		break;
+
 	case '-':
 		scale -= 0.1f;
 		break;

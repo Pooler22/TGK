@@ -35,6 +35,11 @@ void Camera::pitch(float r)
 	rotation = normalize(op1((glm::vec4(op2(rotation, glm::vec3(0.0, 0.0, 1.0)), r)), rotation));
 }
 
+void Camera::yaw(float r)
+{
+	rotation = normalize(op1((glm::vec4(op2(rotation, glm::vec3(0.0, 1.0, 0.0)), r)), rotation));
+}
+
 void Camera::updateVectors()
 {
 	lookAt = op2(rotation, *new glm::vec3(1.0, 0.0, 0.0));

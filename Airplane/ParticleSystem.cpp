@@ -27,13 +27,9 @@ void ParticleSystem::drawParticles(void)
 	for (auto i = 1; i < particleSystem.getNumOfParticles(); i++)
 	{
 		glPushMatrix();
-		// set color and fade value (alpha) of current particle
 		glColor4f(particleSystem.getR(i), particleSystem.getG(i), particleSystem.getB(i), particleSystem.getAlpha(i));
-		// move the current particle to its new position
 		glTranslatef(particleSystem.getXPos(i), particleSystem.getYPos(i), particleSystem.getZPos(i)); //+ zoom
-		// rotate the particle (this is proof of concept for when proper smoke texture_t is added)
 		glRotatef(particleSystem.getDirection(i) - 0, 0, 0, 1);
-		// scale the wurrent particle (only used for smoke)
 		glScalef(particleSystem.getScale(i), particleSystem.getScale(i), particleSystem.getScale(i));
 
 		//glDisable(GL_DEPTH_TEST);

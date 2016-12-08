@@ -14,6 +14,7 @@ public:
 	Camera();
 	void roll(float r);
 	void pitch(float r);
+	void yaw(float r);
 	void updateVectors();
 };
 

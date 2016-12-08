@@ -1,7 +1,7 @@
 #ifndef System_h
 #define System_h
 
-#define MAX_PARTICLES 3000
+#define MAX_PARTICLES 1000
 
 typedef float fVector[3];
 

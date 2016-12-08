@@ -20,6 +20,7 @@ public:
 	void updateCamera() const;
 	void updateRoll(float deg);
 	void updatePitch(float deg);
+	void updateYaw(float deg);
 	void moveForward(float sealevel);
 	void increaseSpeed();
 	void decreaseSpeed();

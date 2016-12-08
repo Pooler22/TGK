@@ -44,6 +44,13 @@ void AirPlane::updatePitch(float deg)
 	cam.updateVectors();
 }
 
+void AirPlane::updateYaw(float deg)
+{
+	cam.yaw(deg);
+	cam.updateVectors();
+}
+
+
 void AirPlane::moveForward(float sealevel)
 {
 	cam.position += cam.lookAt * moveSpeed;

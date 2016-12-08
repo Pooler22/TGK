@@ -19,9 +19,9 @@ public:
 
 	void Spring::Draw(GLfloat move)
 	{
-		auto u = 0;
-		auto sinU = sin(u);
-		auto cosU = cos(u);
+		auto t = 0;
+		auto sin_t = sin(t);
+		auto cos_t = cos(t);
 		auto move2 = move;
 
 		if (move >= 0)
@@ -53,7 +53,7 @@ public:
 			auto cosT = cos(t);
 
 			glPushMatrix();
-			glTranslatef(cosT * (3.f + cosU), 0.6f * t + sinU + move2, sinT * (3.f + cosU));
+			glTranslatef(cosT * (3.f + cos_t), 0.6f * t + sin_t + move2, sinT * (3.f + cos_t));
 			gluSphere(sphereObject, 1, 10, 10);
 			glPopMatrix();
 
